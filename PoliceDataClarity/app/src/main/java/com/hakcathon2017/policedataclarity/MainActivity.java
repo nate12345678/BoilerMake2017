@@ -168,12 +168,82 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	public void averageDailyHours(String url){
-		ArrayList<JsonObject> a= returnJsonArray(url)
+		ArrayList<JsonObject> a= returnJsonArray(url);
+		String s;
+		String[] D;
+		int yearStr;
+		int monthStr;
+		int dayStr;
+		int dayEnd;
+		int monthEnd;
+		int yearEnd;
+		int hourStr;
+		int hourEnd;
+		int minStr;
+		int minEnd;
+
+
+		float noOfHours=0;
 		for(int i=0; i<a.size();i++){
+			//String DTime=
+			//D=DTime.split("\");
+			s = a.get(i).StartTime;
+			s=(s.split(" "))[0];
+			D = s.split("/");
+			yearStr = Integer.parseInt(D[0]);
+			monthStr = Integer.parseInt(D[1]);
+			dayStr = Integer.parseInt(D[2]);
+			s = a.get(i).EndTime;
+			s=(s.split(" "))[0];
+			D = s.split("/");
+			dayEnd = Integer.parseInt(D[2]);
+			monthEnd = Integer.parseInt(D[1]);
+			dayEnd = Integer.parseInt(D[2]);
+
+			s = a.get(i).StartTime;
+			s=(s.split(" "))[2];
+			D = s.split(":");
+			minStr=Integer.parseInt(D[1]);
+			hourStr=Integer.parseInt(D[0]);
+			s = a.get(i).EndTime;
+			s=(s.split(" "))[2];
+			D = s.split(":");
+			minEnd=Integer.parseInt(D[1]);
+			hourEnd=Integer.parseInt(D[0]);
+
+			//Not considering edge cases and minutes
+			if((dayStr-dayEnd)>1)
+			{
+				noOfHours+=(dayStr-dayEnd-1)*24;
+				noOfHours+=(24-hourStr)+hourEnd;
+			}
+			else if((dayStr-dayEnd)==1)
+			{
+				noOfHours+=(24-hourStr)+hourEnd;
+			}
+			else
+			{
+				noOfHours+=hourStr-hourEnd;
+			}
+			Globals.averageDailyHours=noOfHours;
 
 		}
 
 	}
+	public void weeklyDispatcherCalls(String url){
+		ArrayList<JsonObject> a= returnJsonArray(url);
+		List<String> list = new ArrayList<String>();
+		for(int i = 0; i < arr.length(); i++){
+			list.add(arr.getJSONObject(i).getString("Type"));
+		}
+		int count = 0
+		for(int i = 0; i < list.length(); i++){
+			if(list.get(i).contains("DSP")){
+				count++;
+			}
+		}
+	}
+
 
 	@Override
 	public void onBackPressed() {

@@ -9,4 +9,5 @@ package com.hakcathon2017.policedataclarity;
 public class Globals {
 	static String username = "NULL";
 	static float averageDailyHours=0;
+	static float noOfDSPType=0;
 }
