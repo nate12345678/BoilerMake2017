@@ -1,12 +1,9 @@
 package com.hakcathon2017.policedataclarity;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.design.widget.FloatingActionButton;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -30,8 +27,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import javax.xml.parsers.SAXParserFactory;
-
 
 public class MainActivity extends AppCompatActivity
 		implements NavigationView.OnNavigationItemSelectedListener {
@@ -43,6 +38,7 @@ public class MainActivity extends AppCompatActivity
 
 
 	volatile ArrayList<JsonObject> list = new ArrayList<>();
+
 	TextView cadUnitText;
 
 
@@ -51,7 +47,7 @@ public class MainActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		SharedPreferences prefs = getSharedPreferences("settings",0);
+		SharedPreferences prefs = getSharedPreferences("settings", 0);
 		Globals.username = prefs.getString("username", "NULL");
 		Log.w("test", Globals.username);
 		if (Globals.username.equals("NULL")) {
@@ -73,15 +69,6 @@ public class MainActivity extends AppCompatActivity
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-		fab.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-						.setAction("Action", null).show();
-			}
-		});
-
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
 				this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -97,13 +84,12 @@ public class MainActivity extends AppCompatActivity
 		run();
 
 	}
+
 	public void run() {
 		(new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
-
-
 					String mainURL = "http://claritybm5.azurewebsites.net/odata/Events?$top=10&$filter=Code%20eq%20%27GAS%27&$orderby=StartTime%20desc";
 					URL url = new URL(mainURL);
 					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -121,7 +107,7 @@ public class MainActivity extends AppCompatActivity
 					//System.out.println("Output from Server .... \n");
 					while ((a = br.readLine()) != null) {
 						//System.out.println(a);
-						output+=a;
+						output += a;
 
 					}
 
@@ -129,25 +115,21 @@ public class MainActivity extends AppCompatActivity
 					JSONArray jsonArr;
 
 
-
-					try{
+					try {
 						jsonArr = new JSONArray(output);
-						for (int i = 0; i < jsonArr.length(); i++)
-						{
+						for (int i = 0; i < jsonArr.length(); i++) {
 
 							JSONObject jsonObj = jsonArr.getJSONObject(i);
-							JsonObject data = new JsonObject(jsonObj.getString("Id"),jsonObj.getString("CadUnit"),jsonObj.getString("OrgUnit"),jsonObj.getString("StartTime"),jsonObj.getString("EndTime"),jsonObj.getString("Type"),jsonObj.getString("Code"),jsonObj.getString("Descr"));
+							JsonObject data = new JsonObject(jsonObj.getString("Id"), jsonObj.getString("CadUnit"), jsonObj.getString("OrgUnit"), jsonObj.getString("StartTime"), jsonObj.getString("EndTime"), jsonObj.getString("Type"), jsonObj.getString("Code"), jsonObj.getString("Descr"));
 							list.add(data);
 							/*String Id=jsonObj.getString("Id");
 							Log.w("test",Id);
 							*/
 						}
 						//String a=list[0].
-						Log.w("test",(list.get(0)).CadUnit);
-					}catch (Exception e){}
-
-
-
+						Log.w("test", (list.get(0)).CadUnit);
+					} catch (Exception e) {
+					}
 
 
 				} catch (MalformedURLException e) {
@@ -218,7 +200,8 @@ public class MainActivity extends AppCompatActivity
 			careerView.setVisibility(View.VISIBLE);
 		} else if (id == R.id.nav_settings) {
 			insightsView.setVisibility(View.VISIBLE);
-		} else if (id == R.id.logout); {
+		} else if (id == R.id.logout) ;
+		{
 			Globals.username = "NULL";
 			startActivity(new Intent(getApplicationContext(), LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
 			finish();
