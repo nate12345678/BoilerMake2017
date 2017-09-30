@@ -98,13 +98,14 @@ public class MainActivity extends AppCompatActivity
 
 	}
 	public ArrayList<JsonObject> returnJsonArray(String url) {
+		final String finalURL = url;
 		(new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
 
 
-					String mainURL = url;
+					String mainURL = finalURL;
 					URL url = new URL(mainURL);
 					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 					conn.setRequestMethod("GET");
