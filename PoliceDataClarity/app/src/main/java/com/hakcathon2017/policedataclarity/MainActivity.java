@@ -2,18 +2,20 @@ package com.hakcathon2017.policedataclarity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -39,17 +41,34 @@ public class MainActivity extends AppCompatActivity
 	LinearLayout weekView;
 	LinearLayout careerView;
 
+
 	volatile ArrayList<JsonObject> list = new ArrayList<>();
+	TextView cadUnitText;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		SharedPreferences prefs = getSharedPreferences("settings",0);
+		Globals.username = prefs.getString("username", "NULL");
+		Log.w("test", Globals.username);
+		if (Globals.username.equals("NULL")) {
+			startActivity(new Intent(getApplicationContext(), LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
+			finish();
+		}
+
 		insightsView = (LinearLayout) findViewById(R.id.insightsView);
 		rankingView = (LinearLayout) findViewById(R.id.rankingView);
 		weekView = (LinearLayout) findViewById(R.id.weekView);
 		careerView = (LinearLayout) findViewById(R.id.careerView);
+		cadUnitText = (TextView) findViewById(R.id.cadUnitText);
+
+		rankingView.setVisibility(View.GONE);
+		weekView.setVisibility(View.GONE);
+		careerView.setVisibility(View.GONE);
+//		cadUnitText.setText(Globals.username);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
@@ -187,6 +206,7 @@ public class MainActivity extends AppCompatActivity
 		rankingView.setVisibility(View.GONE);
 		weekView.setVisibility(View.GONE);
 		careerView.setVisibility(View.GONE);
+		Log.v("test", "launch");
 
 		if (id == R.id.nav_insights) {
 			insightsView.setVisibility(View.VISIBLE);
@@ -198,6 +218,10 @@ public class MainActivity extends AppCompatActivity
 			careerView.setVisibility(View.VISIBLE);
 		} else if (id == R.id.nav_settings) {
 			insightsView.setVisibility(View.VISIBLE);
+		} else if (id == R.id.logout); {
+			Globals.username = "NULL";
+			startActivity(new Intent(getApplicationContext(), LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
+			finish();
 		}
 
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
