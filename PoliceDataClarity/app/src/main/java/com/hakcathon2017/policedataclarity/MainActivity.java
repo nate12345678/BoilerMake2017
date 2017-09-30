@@ -167,6 +167,14 @@ public class MainActivity extends AppCompatActivity
 		return list;
 	}
 
+	public void averageDailyHours(String url){
+		ArrayList<JsonObject> a= returnJsonArray(url);
+		for(int i=0; i<a.size();i++){
+			
+		}
+
+	}
+
 	@Override
 	public void onBackPressed() {
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
