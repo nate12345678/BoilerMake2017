@@ -232,12 +232,12 @@ public class MainActivity extends AppCompatActivity
 	}
 	public void weeklyDispatcherCalls(String url){
 		ArrayList<JsonObject> a= returnJsonArray(url);
-		List<String> list = new ArrayList<String>();
-		for(int i = 0; i < arr.length(); i++){
-			list.add(arr.getJSONObject(i).getString("Type"));
+		ArrayList<String> list = new ArrayList<String>();
+		for(int i = 0; i < a.size(); i++){
+			list.add((a.get(i)).Type);
 		}
 		int count = 0
-		for(int i = 0; i < list.length(); i++){
+		for(int i = 0; i < list.size(); i++){
 			if(list.get(i).contains("DSP")){
 				count++;
 			}
