@@ -1,0 +1,14 @@
+public void weeklyDispatcherCalls(String url){
+		ArrayList<JsonObject> a= returnJsonArray(url);
+		JSONArray arr = new JSONArray(yourJSONresponse);
+		List<String> list = new ArrayList<String>();
+		for(int i = 0; i < arr.length(); i++){
+    	list.add(arr.getJSONObject(i).getString("Type"));
+		}
+		int count = 0
+		for(int i = 0; i < list.length(); i++){
+			if(list.get(i).contains("DSP")){
+				count++;
+			}
+		}
+	}
