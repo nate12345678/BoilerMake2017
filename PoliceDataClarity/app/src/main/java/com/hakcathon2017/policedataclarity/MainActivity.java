@@ -29,6 +29,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.xml.parsers.SAXParserFactory;
+
+import static android.R.id.list;
+
 
 public class MainActivity extends AppCompatActivity
 		implements NavigationView.OnNavigationItemSelectedListener {
@@ -41,8 +45,6 @@ public class MainActivity extends AppCompatActivity
 
 	Toolbar toolbar;
 
-	volatile ArrayList<JsonObject> list = new ArrayList<>();
-
 	TextView cadUnitText;
 
 
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity
 
 		SharedPreferences prefs = getSharedPreferences("settings", 0);
 		Globals.username = prefs.getString("username", "NULL");
-		Log.w("test", Globals.username);
+		//Log.w("test", Globals.username);
 		if (Globals.username.equals("NULL")) {
 			startActivity(new Intent(getApplicationContext(), LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
 			finish();
@@ -89,17 +91,23 @@ public class MainActivity extends AppCompatActivity
 		//TextView t= (TextView)findViewById(R.id.textView5);
 		//t.setText(data);
 
-		run();
+		//returnJsonArray();
+		weeklyDispatcherCalls("dfdf");
 
 	}
+  
+  
+	public ArrayList<JsonObject> returnJsonArray(String url) {
 
-	public void run() {
+		final String finalURL = url;
+
 		(new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					String mainURL =
-							"http://claritybm5.azurewebsites.net/odata/Events?$top=10&$filter=Code%20eq%20%27GAS%27&$orderby=StartTime%20desc";
+					Log.w("Nate's test",finalURL);
+					String mainURL = finalURL;
+
 					URL url = new URL(mainURL);
 					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 					conn.setRequestMethod("GET");
@@ -124,23 +132,24 @@ public class MainActivity extends AppCompatActivity
 					JSONArray jsonArr;
 
 
-					try {
+					try{
 						jsonArr = new JSONArray(output);
 						for (int i = 0; i < jsonArr.length(); i++) {
 
 							JSONObject jsonObj = jsonArr.getJSONObject(i);
-							JsonObject data = new JsonObject(jsonObj.getString("Id"), jsonObj.getString("CadUnit"), jsonObj.getString("OrgUnit"),
-									jsonObj.getString("StartTime"), jsonObj.getString("EndTime"), jsonObj.getString("Type"),
-									jsonObj.getString("Code"), jsonObj.getString("Descr"));
-							list.add(data);
+							JsonObject data = new JsonObject(jsonObj.getString("Id"),jsonObj.getString("CadUnit"),jsonObj.getString("OrgUnit"),jsonObj.getString("StartTime"),jsonObj.getString("EndTime"),jsonObj.getString("Type"),jsonObj.getString("Code"),jsonObj.getString("Descr"));
+							Log.w("test asdads",data.Type);
+							Globals.list.add(data);
+							Log.w("test asdads",Integer.toString(Globals.list.size()));
+
 							/*String Id=jsonObj.getString("Id");
 							Log.w("test",Id);
 							*/
 						}
+
 						//String a=list[0].
-						Log.w("test", (list.get(0)).CadUnit);
-					} catch (Exception e) {
-					}
+						Log.w("test function",Integer.toString(Globals.list.size()));
+					}catch (Exception e){}
 
 
 				} catch (MalformedURLException e) {
@@ -151,11 +160,93 @@ public class MainActivity extends AppCompatActivity
 					e.printStackTrace();
 
 				}
+
 			}
 		})).start();
+		Log.w("test function",Integer.toString(Globals.list.size()));
+		return Globals.list;
+	}
 
+	public void averageDailyHours(String url){
+		ArrayList<JsonObject> a= returnJsonArray(url);
+		String s;
+		String[] D;
+		int yearStr;
+		int monthStr;
+		int dayStr;
+		int dayEnd;
+		int monthEnd;
+		int yearEnd;
+		int hourStr;
+		int hourEnd;
+		int minStr;
+		int minEnd;
+
+
+		float noOfHours=0;
+		for(int i=0; i<a.size();i++){
+			//String DTime=
+			//D=DTime.split("\");
+			s = a.get(i).StartTime;
+			s=(s.split(" "))[0];
+			D = s.split("/");
+			yearStr = Integer.parseInt(D[0]);
+			monthStr = Integer.parseInt(D[1]);
+			dayStr = Integer.parseInt(D[2]);
+			s = a.get(i).EndTime;
+			s=(s.split(" "))[0];
+			D = s.split("/");
+			dayEnd = Integer.parseInt(D[2]);
+			monthEnd = Integer.parseInt(D[1]);
+			dayEnd = Integer.parseInt(D[2]);
+
+			s = a.get(i).StartTime;
+			s=(s.split(" "))[2];
+			D = s.split(":");
+			minStr=Integer.parseInt(D[1]);
+			hourStr=Integer.parseInt(D[0]);
+			s = a.get(i).EndTime;
+			s=(s.split(" "))[2];
+			D = s.split(":");
+			minEnd=Integer.parseInt(D[1]);
+			hourEnd=Integer.parseInt(D[0]);
+
+			//Not considering edge cases and minutes
+			if((dayStr-dayEnd)>1)
+			{
+				noOfHours+=(dayStr-dayEnd-1)*24;
+				noOfHours+=(24-hourStr)+hourEnd;
+			}
+			else if((dayStr-dayEnd)==1)
+			{
+				noOfHours+=(24-hourStr)+hourEnd;
+			}
+			else
+			{
+				noOfHours+=hourStr-hourEnd;
+			}
+			Globals.averageDailyHours=noOfHours;
+
+		}
 
 	}
+	public void weeklyDispatcherCalls(String url){
+		ArrayList<JsonObject> a= returnJsonArray("http://claritybm5.azurewebsites.net/odata/Events?$top=100&%20and%20Type%20eq%20%27SCHED%27%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20sub%207%20eq%2022&$orderby=StartTime%20asc");
+		Log.w("testing dsp",Integer.toString(a.size()));
+		ArrayList<String> list = new ArrayList<String>();
+		for(int i = 0; i < a.size(); i++){
+			list.add((a.get(i)).Type);
+		}
+		int count = 0;
+		for(int i = 0; i < list.size(); i++){
+			if(list.get(i).equals("DSP")){
+				count++;
+			}
+		}
+		Globals.noOfDSPType=count;
+		Log.w("testing dsp",Integer.toString(count));
+	}
+
 
 	@Override
 	public void onBackPressed() {

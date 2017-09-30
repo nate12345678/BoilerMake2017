@@ -1,5 +1,7 @@
 package com.hakcathon2017.policedataclarity;
 
+import java.util.ArrayList;
+
 /**
  * Copyright (C) 2017 Nathan Post. All rights reserved.
  * Created by Nathan Post on 9/30/17.
@@ -8,6 +10,9 @@ package com.hakcathon2017.policedataclarity;
 
 public class Globals {
 	static String username = "NULL";
+	volatile static ArrayList<JsonObject> list = new ArrayList<>();
+	static float averageDailyHours=0;
+	static float noOfDSPType=0;
 	static String mainURL = "http://claritybm5.azurewebsites.net/odata/Events?$filter=CadUnit%20eq%20%27PN007%27";
 
 	final String allSched = "%20and%20Type%20eq%20%27SCHED%27&$orderby=StartTime%20asc";
