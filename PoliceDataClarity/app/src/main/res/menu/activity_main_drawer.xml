@@ -12,11 +12,11 @@
             android:title="Ranking"/>
         <item
             android:id="@+id/nav_week"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_today_black_24dp"
             android:title="Week Overview"/>
         <item
             android:id="@+id/nav_career"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_book_black_24dp"
             android:title="Career"/>
     </group>
 
