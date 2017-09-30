@@ -94,17 +94,17 @@ public class MainActivity extends AppCompatActivity
 		//TextView t= (TextView)findViewById(R.id.textView5);
 		//t.setText(data);
 
-		run();
+		returnJsonArray();
 
 	}
-	public void run() {
+	public ArrayList<JsonObject> returnJsonArray(String url) {
 		(new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
 
 
-					String mainURL = "http://claritybm5.azurewebsites.net/odata/Events?$top=10&$filter=Code%20eq%20%27GAS%27&$orderby=StartTime%20desc";
+					String mainURL = url;
 					URL url = new URL(mainURL);
 					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 					conn.setRequestMethod("GET");
@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity
 
 
 					try{
+						list=null;
 						jsonArr = new JSONArray(output);
 						for (int i = 0; i < jsonArr.length(); i++)
 						{
@@ -158,10 +159,11 @@ public class MainActivity extends AppCompatActivity
 					e.printStackTrace();
 
 				}
+
 			}
 		})).start();
 
-
+		return list;
 	}
 
 	@Override
