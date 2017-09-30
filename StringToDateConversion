@@ -1,4 +1,5 @@
-String date = "09/30/2017";
-
-DateFormat df = new SimpleDateFormat("yyyy/mm/dd");
-Date dateType = df.parse(date);
+String mainDate = "2017/09/30";
+String[] Date1 = mainDate.split("/");
+int year = Integer.parseInt(Date1[0]);
+int month = Integer.parseInt(Date1[1]);
+int day = Integer.parseInt(Date1[2]);
