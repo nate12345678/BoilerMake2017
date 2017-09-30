@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,13 +9,27 @@
     tools:context="com.hakcathon2017.policedataclarity.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <TextView
+    <include
+        android:id="@+id/insightsView"
+        layout="@layout/layout_insights"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_height="wrap_content"/>
 
-</android.support.constraint.ConstraintLayout>
+    <include
+        android:id="@+id/careerView"
+        layout="@layout/layout_career"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <include
+        android:id="@+id/rankingView"
+        layout="@layout/layout_ranking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <include
+        android:id="@+id/weekView"
+        layout="@layout/layout_week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>
