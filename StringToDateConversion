@@ -1,4 +1,4 @@
-String date = "06/27/2007";
+String date = "09/30/2017";
 
 DateFormat df = new SimpleDateFormat("mm/dd/yyyy");
 Date dateType = df.parse(date);
