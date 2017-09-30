@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
 		implements NavigationView.OnNavigationItemSelectedListener {
@@ -25,28 +26,32 @@ public class MainActivity extends AppCompatActivity
 	LinearLayout weekView;
 	LinearLayout careerView;
 
-	static String username;
+	TextView cadUnitText;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		SharedPreferences prefs = getPreferences(0);
-		username = prefs.getString("username", "NULL");
-		Log.w("test", username);
-		if (username.equals("NULL")) {
-			startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+		SharedPreferences prefs = getSharedPreferences("settings",0);
+		Globals.username = prefs.getString("username", "NULL");
+		Log.w("test", Globals.username);
+		if (Globals.username.equals("NULL")) {
+			startActivity(new Intent(getApplicationContext(), LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
+			finish();
 		}
 
 		insightsView = (LinearLayout) findViewById(R.id.insightsView);
 		rankingView = (LinearLayout) findViewById(R.id.rankingView);
 		weekView = (LinearLayout) findViewById(R.id.weekView);
 		careerView = (LinearLayout) findViewById(R.id.careerView);
+		cadUnitText = (TextView) findViewById(R.id.cadUnitText);
 
 		rankingView.setVisibility(View.GONE);
 		weekView.setVisibility(View.GONE);
 		careerView.setVisibility(View.GONE);
+//		cadUnitText.setText(Globals.username);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
@@ -125,8 +130,9 @@ public class MainActivity extends AppCompatActivity
 		} else if (id == R.id.nav_settings) {
 			insightsView.setVisibility(View.VISIBLE);
 		} else if (id == R.id.logout); {
-			username = "NULL";
-			startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+			Globals.username = "NULL";
+			startActivity(new Intent(getApplicationContext(), LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
+			finish();
 		}
 
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

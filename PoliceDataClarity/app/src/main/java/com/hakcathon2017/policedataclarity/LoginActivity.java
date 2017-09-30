@@ -14,10 +14,11 @@ public class LoginActivity extends ExtendedActivity {
 
 	public void login(View v) {
 		if (passwordText.getText().toString().equals("aaaa")) {
-			MainActivity.username = usernameText.getText().toString().toUpperCase();
-			SharedPreferences prefs = getPreferences(0);
+			Globals.username = usernameText.getText().toString().toUpperCase();
+			Log.w("login", Globals.username);
+			SharedPreferences prefs = getSharedPreferences("settings", 0);
 			SharedPreferences.Editor editor = prefs.edit();
-			editor.putString("username", MainActivity.username);
+			editor.putString("username", Globals.username);
 			editor.commit();
 			startActivity(new Intent(getApplicationContext(), MainActivity.class));
 		}
