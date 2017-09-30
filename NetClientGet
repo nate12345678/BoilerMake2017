@@ -11,9 +11,9 @@ public class NetClientGet {
 	public static void main(String[] args) {
 
 		try {
-
-			URL url = new URL(
-					"http://claritybm5.azurewebsites.net/odata/Events?$top=10&$filter=Code%20eq%20%27GAS%27&$orderby=StartTime%20desc");
+			
+			String mainURL = "http://claritybm5.azurewebsites.net/odata/Events?$top=10&$filter=Code%20eq%20%27GAS%27&$orderby=StartTime%20desc";
+			URL url = new URL(mainURL);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 			conn.setRequestProperty("Accept", "application/json");
@@ -25,11 +25,13 @@ public class NetClientGet {
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					(conn.getInputStream())));
 
-			String output;
+			String output = "";
+			String a;
 			System.out.println("Output from Server .... \n");
-			while ((output = br.readLine()) != null) {
-
-				System.out.println(output);
+			while ((a = br.readLine()) != null) {
+				System.out.println(a);
+				output+=a;
+				
 			}
 			
 			conn.disconnect();
