@@ -168,9 +168,9 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	public void averageDailyHours(String url){
-		ArrayList<JsonObject> a= returnJsonArray(url);
+		ArrayList<JsonObject> a= returnJsonArray(url)
 		for(int i=0; i<a.size();i++){
-			
+
 		}
 
 	}
