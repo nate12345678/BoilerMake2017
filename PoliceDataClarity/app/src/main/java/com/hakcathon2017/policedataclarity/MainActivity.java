@@ -1,10 +1,8 @@
 package com.hakcathon2017.policedataclarity;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.design.widget.FloatingActionButton;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -42,8 +41,9 @@ public class MainActivity extends AppCompatActivity
 	LinearLayout rankingView;
 	LinearLayout weekView;
 	LinearLayout careerView;
+	RelativeLayout mainLayout;
 
-
+	Toolbar toolbar;
 
 	TextView cadUnitText;
 
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		SharedPreferences prefs = getSharedPreferences("settings",0);
+		SharedPreferences prefs = getSharedPreferences("settings", 0);
 		Globals.username = prefs.getString("username", "NULL");
 		//Log.w("test", Globals.username);
 		if (Globals.username.equals("NULL")) {
@@ -61,28 +61,23 @@ public class MainActivity extends AppCompatActivity
 			finish();
 		}
 
+		Globals.mainURL = "http://claritybm5.azurewebsites.net/odata/Events?$filter=CadUnit%20eq%20%27" + Globals.username + "%27";
+
 		insightsView = (LinearLayout) findViewById(R.id.insightsView);
 		rankingView = (LinearLayout) findViewById(R.id.rankingView);
 		weekView = (LinearLayout) findViewById(R.id.weekView);
 		careerView = (LinearLayout) findViewById(R.id.careerView);
 		cadUnitText = (TextView) findViewById(R.id.cadUnitText);
+		mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
 
 		rankingView.setVisibility(View.GONE);
 		weekView.setVisibility(View.GONE);
 		careerView.setVisibility(View.GONE);
 //		cadUnitText.setText(Globals.username);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
-
-		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-		fab.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-						.setAction("Action", null).show();
-			}
-		});
+		toolbar.setTitle("Insights");
 
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -100,16 +95,19 @@ public class MainActivity extends AppCompatActivity
 		weeklyDispatcherCalls("dfdf");
 
 	}
+  
+  
 	public ArrayList<JsonObject> returnJsonArray(String url) {
 
 		final String finalURL = url;
+
 		(new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
-
 					Log.w("Nate's test",finalURL);
 					String mainURL = finalURL;
+
 					URL url = new URL(mainURL);
 					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 					conn.setRequestMethod("GET");
@@ -126,7 +124,7 @@ public class MainActivity extends AppCompatActivity
 					//System.out.println("Output from Server .... \n");
 					while ((a = br.readLine()) != null) {
 						//System.out.println(a);
-						output+=a;
+						output += a;
 
 					}
 
@@ -134,18 +132,16 @@ public class MainActivity extends AppCompatActivity
 					JSONArray jsonArr;
 
 
-
 					try{
-						//list=null;
 						jsonArr = new JSONArray(output);
-						for (int i = 0; i < jsonArr.length(); i++)
-						{
+						for (int i = 0; i < jsonArr.length(); i++) {
 
 							JSONObject jsonObj = jsonArr.getJSONObject(i);
 							JsonObject data = new JsonObject(jsonObj.getString("Id"),jsonObj.getString("CadUnit"),jsonObj.getString("OrgUnit"),jsonObj.getString("StartTime"),jsonObj.getString("EndTime"),jsonObj.getString("Type"),jsonObj.getString("Code"),jsonObj.getString("Descr"));
 							Log.w("test asdads",data.Type);
 							Globals.list.add(data);
 							Log.w("test asdads",Integer.toString(Globals.list.size()));
+
 							/*String Id=jsonObj.getString("Id");
 							Log.w("test",Id);
 							*/
@@ -154,9 +150,6 @@ public class MainActivity extends AppCompatActivity
 						//String a=list[0].
 						Log.w("test function",Integer.toString(Globals.list.size()));
 					}catch (Exception e){}
-
-
-
 
 
 				} catch (MalformedURLException e) {
@@ -301,15 +294,19 @@ public class MainActivity extends AppCompatActivity
 
 		if (id == R.id.nav_insights) {
 			insightsView.setVisibility(View.VISIBLE);
+			toolbar.setTitle("Insights");
 		} else if (id == R.id.nav_ranking) {
 			rankingView.setVisibility(View.VISIBLE);
+			toolbar.setTitle("Rankings");
 		} else if (id == R.id.nav_week) {
 			weekView.setVisibility(View.VISIBLE);
+			toolbar.setTitle("Week Overview");
 		} else if (id == R.id.nav_career) {
 			careerView.setVisibility(View.VISIBLE);
+			toolbar.setTitle("Career");
 		} else if (id == R.id.nav_settings) {
-			insightsView.setVisibility(View.VISIBLE);
-		} else if (id == R.id.logout); {
+			Snackbar.make(mainLayout, "No Settings at this time", Snackbar.LENGTH_SHORT).show();
+		} else if (id == R.id.logout) {
 			Globals.username = "NULL";
 			startActivity(new Intent(getApplicationContext(), LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
 			finish();
