@@ -1,8 +1,10 @@
 package com.hakcathon2017.policedataclarity;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +17,20 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+
+import javax.xml.parsers.SAXParserFactory;
+
+
 public class MainActivity extends AppCompatActivity
 		implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -22,6 +38,8 @@ public class MainActivity extends AppCompatActivity
 	LinearLayout rankingView;
 	LinearLayout weekView;
 	LinearLayout careerView;
+
+	volatile ArrayList<JsonObject> list = new ArrayList<>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +71,78 @@ public class MainActivity extends AppCompatActivity
 
 		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 		navigationView.setNavigationItemSelectedListener(this);
-		String data ="http://www.bsservicess.com/photoUpload/star_avg.php?bookName=";
-		TextView t= (TextView)findViewById(R.id.textView5);
-		t.setText(data);
+		//String data ="http://www.bsservicess.com/photoUpload/star_avg.php?bookName=";
+		//TextView t= (TextView)findViewById(R.id.textView5);
+		//t.setText(data);
+
+		run();
+
+	}
+	public void run() {
+		(new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+
+
+					String mainURL = "http://claritybm5.azurewebsites.net/odata/Events?$top=10&$filter=Code%20eq%20%27GAS%27&$orderby=StartTime%20desc";
+					URL url = new URL(mainURL);
+					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+					conn.setRequestMethod("GET");
+					conn.setRequestProperty("Accept", "application/json");
+
+					if (conn.getResponseCode() != 200) {
+						//Log.e("ConnectionError", "Failed : HTTP error code : " + conn.getResponseCode());
+						throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+					}
+					BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+
+					String output = "";
+					String a;
+					//System.out.println("Output from Server .... \n");
+					while ((a = br.readLine()) != null) {
+						//System.out.println(a);
+						output+=a;
+
+					}
+
+					conn.disconnect();
+					JSONArray jsonArr;
+
+
+
+					try{
+						jsonArr = new JSONArray(output);
+						for (int i = 0; i < jsonArr.length(); i++)
+						{
+
+							JSONObject jsonObj = jsonArr.getJSONObject(i);
+							JsonObject data = new JsonObject(jsonObj.getString("Id"),jsonObj.getString("CadUnit"),jsonObj.getString("OrgUnit"),jsonObj.getString("StartTime"),jsonObj.getString("EndTime"),jsonObj.getString("Type"),jsonObj.getString("Code"),jsonObj.getString("Descr"));
+							list.add(data);
+							/*String Id=jsonObj.getString("Id");
+							Log.w("test",Id);
+							*/
+						}
+						//String a=list[0].
+						Log.w("test",(list.get(0)).CadUnit);
+					}catch (Exception e){}
+
+
+
+
+
+				} catch (MalformedURLException e) {
+
+					e.printStackTrace();
+				} catch (IOException e) {
+
+					e.printStackTrace();
+
+				}
+			}
+		})).start();
+
+
 	}
 
 	@Override
@@ -118,3 +205,4 @@ public class MainActivity extends AppCompatActivity
 		return true;
 	}
 }
+
