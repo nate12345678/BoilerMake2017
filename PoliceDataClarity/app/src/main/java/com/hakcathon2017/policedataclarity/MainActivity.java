@@ -90,8 +90,15 @@ public class MainActivity extends AppCompatActivity
 		//t.setText(data);
 
 		//returnJsonArray();
-		//weeklyDispatcherCalls();
+		weeklyDispatcherCalls();
 		averageDailyHours();
+		ExtraCalls();
+		Tstop();
+		GN();
+		THREAS();
+		COMINT();
+		PERGON();
+		PERDOWN();
 	}
   
   
@@ -422,7 +429,7 @@ public class MainActivity extends AppCompatActivity
 		})).start();
 
 	}
-	public void PERDOW(){
+	public void PERDOWN(){
 		(new Thread(new Runnable() {
 			@Override
 			public void run() {
