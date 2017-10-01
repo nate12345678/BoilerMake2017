@@ -1,0 +1,17 @@
+http://claritybm5.azurewebsites.net/odata/Events?
+
+Queries:
+$top=(number of results) (ex. $top=100)
+$filter=(Parameter)%20eq%20(parameter) (ex. $filter=Type%20eq%20%27DSP%27)
+$orderby=(Parameter)(asc/desc) (ex. $orderby=Id%20asc)
+
+Functions:
+day(StartTime/EndTime)%20=%20(numDay)
+month(StartTime/EndTime)%20=%20(numMonth)
+year(StartTime/EndTime)%20=%20(numYear)
+
+eq = equals
+gt = greater than
+ge = greater than/equal to
+lt = less than
+le = less than/equal to
