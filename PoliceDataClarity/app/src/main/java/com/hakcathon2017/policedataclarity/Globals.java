@@ -1,5 +1,7 @@
 package com.hakcathon2017.policedataclarity;
 
+import java.util.ArrayList;
+
 /**
  * Copyright (C) 2017 Nathan Post. All rights reserved.
  * Created by Nathan Post on 9/30/17.
@@ -7,8 +9,26 @@ package com.hakcathon2017.policedataclarity;
  */
 
 public class Globals {
+
+	volatile static ArrayList<JsonObject> list = new ArrayList<>();
+
+	static int averageDailyHours=0;
+	static int noOfSDKDSPType=0;
+	static int noOfTSTOPType=0;
+	static int SHOTSF=0;
+	static int GN=0;
+	static int THREAS=0;
+	static int COMINT=0;
+	static int PERGON=0;
+	static int PERDOWN=0;
+
+	volatile static int noOfDSPType = 0;
+
+	static String precinct = "";
+	static String mainURL = "http://claritybm5.azurewebsites.net/odata/Events?$filter=CadUnit%20eq%20%27PN007%27";
 	static String username = "NULL";
-	static final String allButSched = "%20and%20Type%20ne%20%27SCHED%27&$orderby=StartTime%20asc";
+
+  static final String allButSched = "%20and%20Type%20ne%20%27SCHED%27&$orderby=StartTime%20asc";
 	static final String allLastWeek = "%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20add%207%20gt%2031&$orderby=StartTime%20asc";
 	static final String allLastWeekSkip5000 ="%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20add%207%20gt%2031&$skip=5000&$orderby=StartTime%20asc";
 	static final String allStat = "$orderby=StartTime%20asc";
@@ -37,3 +57,4 @@ public class Globals {
 	static final String allPerdown = "%20and%20Code%20eq%20%27PERDOW%27&$orderby=StartTime%20asc";
 	static final String lastWeekPerdown = "%20and%20Code%20eq%20%27PERDOW%27%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20add%207%20gt%2031&$orderby=StartTime%20asc";
 	}
+
