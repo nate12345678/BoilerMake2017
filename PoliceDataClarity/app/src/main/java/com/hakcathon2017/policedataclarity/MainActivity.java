@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -29,21 +30,22 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import static com.hakcathon2017.policedataclarity.Globals.mainURL;
-
 
 public class MainActivity extends AppCompatActivity
 		implements NavigationView.OnNavigationItemSelectedListener {
 
 	LinearLayout insightsView;
 	LinearLayout rankingView;
-	LinearLayout weekView;
-	LinearLayout careerView;
+	ScrollView weekView;
+	ScrollView careerView;
 	RelativeLayout mainLayout;
 
 	Toolbar toolbar;
 
 	TextView cadUnitText;
+	TextView weekDispText;
+	TextView weekOverviewText;
+	TextView careerStatsText;
 
 
 	@Override
@@ -59,19 +61,23 @@ public class MainActivity extends AppCompatActivity
 			finish();
 		}
 
-		mainURL = "http://claritybm5.azurewebsites.net/odata/Events?$filter=CadUnit%20eq%20%27" + Globals.username + "%27";
+		Globals.mainURL = "http://claritybm5.azurewebsites.net/odata/Events?$filter=CadUnit%20eq%20%27" + Globals.username + "%27";
+		Globals.precinct = Globals.username.substring(0, 2);
 
 		insightsView = (LinearLayout) findViewById(R.id.insightsView);
 		rankingView = (LinearLayout) findViewById(R.id.rankingView);
-		weekView = (LinearLayout) findViewById(R.id.weekView);
-		careerView = (LinearLayout) findViewById(R.id.careerView);
+		weekView = (ScrollView) findViewById(R.id.weekView);
+		careerView = (ScrollView) findViewById(R.id.careerView);
 		cadUnitText = (TextView) findViewById(R.id.cadUnitText);
+		weekDispText = (TextView) findViewById(R.id.weekDispText);
+		careerStatsText = (TextView) findViewById(R.id.careerStatsText);
+		weekOverviewText = (TextView) findViewById(R.id.weekOverviewText);
+
 		mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
 
 		rankingView.setVisibility(View.GONE);
 		weekView.setVisibility(View.GONE);
 		careerView.setVisibility(View.GONE);
-//		cadUnitText.setText(Globals.username);
 
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
@@ -109,9 +115,14 @@ public class MainActivity extends AppCompatActivity
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+    
+		weeklyDispatcherCalls();
+		weekOverview();
+		careerStats();
+
 	}
-  
-  
+
+
 	public ArrayList<JsonObject> returnJsonArray(String url) {
 		try {
 			Log.w("Nate's test", url);
@@ -141,10 +152,12 @@ public class MainActivity extends AppCompatActivity
 			for (int i = 0; i < jsonArr.length(); i++) {
 
 				JSONObject jsonObj = jsonArr.getJSONObject(i);
-				JsonObject data = new JsonObject(jsonObj.getString("Id"),jsonObj.getString("CadUnit"),jsonObj.getString("OrgUnit"),jsonObj.getString("StartTime"),jsonObj.getString("EndTime"),jsonObj.getString("Type"),jsonObj.getString("Code"),jsonObj.getString("Descr"));
-				Log.w("test asdads",data.Type);
+				JsonObject data = new JsonObject(jsonObj.getString("Id"), jsonObj.getString("CadUnit"), jsonObj.getString("OrgUnit"),
+						jsonObj.getString("StartTime"), jsonObj.getString("EndTime"), jsonObj.getString("Type"), jsonObj.getString("Code"),
+						jsonObj.getString("Descr"));
+				Log.w("test asdads", data.Type);
 				Globals.list.add(data);
-				Log.w("test asdads",Integer.toString(Globals.list.size()));
+				Log.w("test asdads", Integer.toString(Globals.list.size()));
 
 				/*String Id=jsonObj.getString("Id");
 				Log.w("test",Id);
@@ -152,18 +165,72 @@ public class MainActivity extends AppCompatActivity
 			}
 
 			//String a=list[0].
-			Log.w("test function",Integer.toString(Globals.list.size()));
+			Log.w("test function", Integer.toString(Globals.list.size()));
 
 
-		} catch (IOException |JSONException e) {
+		} catch (IOException | JSONException e) {
 
 			e.printStackTrace();
 		}
-		Log.w("test function",Integer.toString(Globals.list.size()));
+		Log.w("test function", Integer.toString(Globals.list.size()));
 		return Globals.list;
 	}
 
-	public void averageDailyHours(){
+
+	void averageDailyHours(String url) {
+		ArrayList<JsonObject> a = returnJsonArray(url);
+		String s;
+		String[] D;
+		int yearStr;
+		int monthStr;
+		int dayStr;
+		int dayEnd;
+		int monthEnd;
+		int yearEnd;
+		int hourStr;
+		int hourEnd;
+		int minStr;
+		int minEnd;
+
+
+		float noOfHours = 0;
+		for (int i = 0; i < a.size(); i++) {
+			//String DTime=
+			//D=DTime.split("\");
+			s = a.get(i).StartTime;
+			s = (s.split(" "))[0];
+			D = s.split("/");
+			yearStr = Integer.parseInt(D[0]);
+			monthStr = Integer.parseInt(D[1]);
+			dayStr = Integer.parseInt(D[2]);
+			s = a.get(i).EndTime;
+			s = (s.split(" "))[0];
+			D = s.split("/");
+			dayEnd = Integer.parseInt(D[2]);
+			monthEnd = Integer.parseInt(D[1]);
+			dayEnd = Integer.parseInt(D[2]);
+
+			s = a.get(i).StartTime;
+			s = (s.split(" "))[2];
+			D = s.split(":");
+			minStr = Integer.parseInt(D[1]);
+			hourStr = Integer.parseInt(D[0]);
+			s = a.get(i).EndTime;
+			s = (s.split(" "))[2];
+			D = s.split(":");
+			minEnd = Integer.parseInt(D[1]);
+			hourEnd = Integer.parseInt(D[0]);
+
+			//Not considering edge cases and minutes
+			if ((dayStr - dayEnd) > 1) {
+				noOfHours += (dayStr - dayEnd - 1) * 24;
+				noOfHours += (24 - hourStr) + hourEnd;
+			} else if ((dayStr - dayEnd) == 1) {
+				noOfHours += (24 - hourStr) + hourEnd;
+			} else {
+				noOfHours += hourStr - hourEnd;
+			}
+			Globals.averageDailyHours = noOfHours;
 
 		(new Thread(new Runnable() {
 			@Override
@@ -234,34 +301,55 @@ public class MainActivity extends AppCompatActivity
 			})).start();
 
 	}
-	public void weeklyDispatcherCalls(){
+
+
+	void weeklyDispatcherCalls() {
 		(new Thread(new Runnable() {
 			@Override
 			public void run() {
-				ArrayList<JsonObject> a= returnJsonArray(Globals.mainURL + Globals.allDisp);
-				Log.w("testing dsp",Integer.toString(a.size()));
-				Log.w("Get url", Globals.mainURL + Globals.allDisp);
+				ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.lastWeekDisp);
+
 				ArrayList<String> list = new ArrayList<>();
-				for(int i = 0; i < a.size(); i++){
+				for (int i = 0; i < a.size(); i++) {
 					list.add((a.get(i)).Type);
 				}
-				int count = 0;
-				for(int i = 0; i < list.size(); i++){
-					if(list.get(i).equals("DSP")){
-						count++;
-					}
-				}
-				Globals.noOfDSPType=count;
-				Log.w("testing dsp",Integer.toString(count));
+				Globals.noOfDSPType = list.size();
+				try{
+					Thread.sleep(50);
+				} catch (Exception e){}
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-
+						weekDispText.setText(Integer.toString(Globals.noOfDSPType));
 					}
 				});
 			}
 		})).start();
 
+	}
+
+
+	void weekOverview() {
+		(new Thread(new Runnable() {
+			@Override
+			public void run() {
+				final ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.allLastWeek);
+				String text = "";
+				for (JsonObject j : a) {
+					text += "ID: " + j.Id + "\n    Start Time: " + j.StartTime + "\n    End Time: " + j.EndTime + "\n    Type: " + j.Type +
+							"\n    Code: " + j.Code + "\n    Description: " + j.Descr + "\n\n\n";
+				}
+				text += "                                                                                                                          " +
+						"                                  ";
+				final String finalText = text;
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						weekOverviewText.setText(finalText);
+					}
+				});
+			}
+		})).start();
 	}
 
 	public void ExtraCalls(){
@@ -437,7 +525,6 @@ public class MainActivity extends AppCompatActivity
 				});
 			}
 		})).start();
-
 	}
 	public void PERDOWN(){
 		(new Thread(new Runnable() {
@@ -461,13 +548,32 @@ public class MainActivity extends AppCompatActivity
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-
+          }
+        };
+  }
+	void careerStats() {
+		(new Thread(new Runnable() {
+			@Override
+			public void run() {
+				final ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.allButSched);
+				String text = "Lifetime activity (excluding hours worked):\n\n";
+				for (JsonObject j : a) {
+					text += "ID: " + j.Id + "\n    Start Time: " + j.StartTime + "\n    End Time: " + j.EndTime + "\n    Type: " + j.Type +
+							"\n    Code: " + j.Code + "\n    Description: " + j.Descr + "\n\n\n";
+				}
+				text += "                                                                                                                          " +
+						"                                  ";
+				final String finalText = text;
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						careerStatsText.setText(finalText);
 					}
 				});
 			}
 		})).start();
-
 	}
+
 	@Override
 	public void onBackPressed() {
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -478,12 +584,14 @@ public class MainActivity extends AppCompatActivity
 		}
 	}
 
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -499,6 +607,7 @@ public class MainActivity extends AppCompatActivity
 
 		return super.onOptionsItemSelected(item);
 	}
+
 
 	@SuppressWarnings("StatementWithEmptyBody")
 	@Override
