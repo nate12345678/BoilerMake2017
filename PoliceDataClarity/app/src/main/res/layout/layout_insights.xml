@@ -8,5 +8,12 @@
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="INSIGHTS"/>
+        android:text="Dispatches in the Last 7 Days:"/>
+
+    <TextView
+        android:id="@+id/weekDispText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="18sp"/>
 </LinearLayout>
