@@ -124,7 +124,9 @@ public class MainActivity extends AppCompatActivity
 			for (int i = 0; i < jsonArr.length(); i++) {
 
 				JSONObject jsonObj = jsonArr.getJSONObject(i);
-				JsonObject data = new JsonObject(jsonObj.getString("Id"),jsonObj.getString("CadUnit"),jsonObj.getString("OrgUnit"),jsonObj.getString("StartTime"),jsonObj.getString("EndTime"),jsonObj.getString("Type"),jsonObj.getString("Code"),jsonObj.getString("Descr"));
+				JsonObject data = new JsonObject(jsonObj.getString("Id"),jsonObj.getString("CadUnit"), jsonObj.getString("OrgUnit"),
+						jsonObj.getString("StartTime"),jsonObj.getString("EndTime"),jsonObj.getString("Type"),jsonObj.getString("Code"),
+						jsonObj.getString("Descr"));
 				Log.w("test asdads",data.Type);
 				Globals.list.add(data);
 				Log.w("test asdads",Integer.toString(Globals.list.size()));
@@ -226,8 +228,8 @@ public class MainActivity extends AppCompatActivity
 						count++;
 					}
 				}
-				Globals.noOfDSPType=count;
-				Log.w("testing dsp",Integer.toString(count));
+				Globals.noOfDSPType = count;
+//				Log.w("testing dsp",Integer.toString(count));
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
