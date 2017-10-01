@@ -446,7 +446,7 @@ public class MainActivity extends AppCompatActivity
 						count++;
 					}
 				}
-				Globals.PERDOW=count;
+				Globals.PERDOWN=count;
 				//Log.w("testing dsp",Integer.toString(count));
 				runOnUiThread(new Runnable() {
 					@Override
