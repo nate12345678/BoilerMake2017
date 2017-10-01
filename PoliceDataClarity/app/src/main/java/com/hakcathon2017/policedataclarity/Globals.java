@@ -30,6 +30,7 @@ public class Globals {
 
   static final String allButSched = "%20and%20Type%20ne%20%27SCHED%27&$orderby=StartTime%20asc";
 	static final String allLastWeek = "%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20add%207%20gt%2031&$orderby=StartTime%20asc";
+	static final String allLastWeekSkip5000 ="%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20add%207%20gt%2031&$skip=5000&$orderby=StartTime%20asc";
 	static final String allStat = "$orderby=StartTime%20asc";
 	static final String allSched = "%20and%20Type%20eq%20%27SCHED%27&$orderby=StartTime%20asc";
 	static final String amountDaysSched = "%20and%20Type%20eq%20%27SCHED%27%20and%20month(StartTime)%20eq%206%20and%20day(StartTime)%20ge%201%20and%20day(StartTime)%20le%207&$orderby=StartTime%20asc";
@@ -51,5 +52,9 @@ public class Globals {
 	static final String lastWeekComint =  "%20and%20Code%20eq%20%27COMINT%27%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20add%207%20gt%2031&$orderby=StartTime%20asc";
 	static final String allGn = "%20and%20Code%20eq%20%27GN%27&$orderby=StartTime%20asc";
 	static final String lastWeekGn = "%20and%20Code%20eq%20%27GN%27%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20add%207%20gt%2031&$orderby=StartTime%20asc";
+	static final String allPergun = "%20and%20Code%20eq%20%27PERGUN%27&$orderby=StartTime%20asc";
+	static final String lastWeekPergun = "%20and%20Code%20eq%20%27PERGUN%27%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20add%207%20gt%2031&$orderby=StartTime%20asc";
+	static final String allPerdown = "%20and%20Code%20eq%20%27PERDOW%27&$orderby=StartTime%20asc";
+	static final String lastWeekPerdown = "%20and%20Code%20eq%20%27PERDOW%27%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20add%207%20gt%2031&$orderby=StartTime%20asc";
 	}
 
