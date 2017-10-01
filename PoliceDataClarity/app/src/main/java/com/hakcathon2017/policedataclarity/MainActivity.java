@@ -46,7 +46,304 @@ public class MainActivity extends AppCompatActivity
 	TextView weekDispText;
 	TextView weekOverviewText;
 	TextView careerStatsText;
+	TextView extraCallsText;
+	TextView trafficStopText;
+	TextView shotsFiredText;
+	TextView gnText;
+	TextView suicideText;
+	TextView comIntText;
+	TextView perGunText;
+	TextView perDownText;
 
+
+	Thread averageDailyHours = new Thread(new Runnable() {
+		@Override
+		public void run() {
+			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.allSched);
+			String s;
+			String[] D;
+			int yearStr;
+			int monthStr;
+			int dayStr;
+			int dayEnd;
+			int monthEnd;
+			int yearEnd;
+			int hourStr;
+			int hourEnd;
+			int minStr;
+			int minEnd;
+
+
+			int noOfHours = 0;
+			for (int i = 0; i <= a.size(); i++) {
+
+				s = a.get(i).StartTime;
+
+				s = (s.split(" "))[0];
+				Log.w("s", s);
+				D = s.split("-");
+				Log.w("D[0]", D[0]);
+				yearStr = Integer.parseInt(D[0]);
+				monthStr = Integer.parseInt(D[1]);
+				dayStr = Integer.parseInt(D[2]);
+				s = a.get(i).EndTime;
+
+				s = (s.split(" "))[0];
+				Log.w("s", s);
+				D = s.split("-");
+				dayEnd = Integer.parseInt(D[2]);
+				monthEnd = Integer.parseInt(D[1]);
+				dayEnd = Integer.parseInt(D[2]);
+
+				s = a.get(i).StartTime;
+
+				s = (s.split(" "))[2];
+				D = s.split(":");
+				minStr = Integer.parseInt(D[1]);
+				hourStr = Integer.parseInt(D[0]);
+				Log.w("s", Integer.toString(hourStr));
+				s = a.get(i).EndTime;
+
+				s = (s.split(" "))[2];
+				D = s.split(":");
+				minEnd = Integer.parseInt(D[1]);
+				hourEnd = Integer.parseInt(D[0]);
+
+				//Not considering edge cases and minutes
+				if ((dayStr - dayEnd) > 1) {
+					noOfHours += (dayStr - dayEnd - 1) * 24;
+					noOfHours += (24 - hourStr) + hourEnd;
+				} else if ((dayStr - dayEnd) == 1) {
+					noOfHours += (24 - hourStr) + hourEnd;
+				} else {
+					noOfHours += -(hourStr - hourEnd);
+				}
+				Globals.averageDailyHours = noOfHours;
+				//Log.w("hours", Double.toString(Globals.averageDailyHours = noOfHours));
+			}
+		}
+	});
+
+
+	Thread weeklyDispatcherCalls = new Thread(new Runnable() {
+		@Override
+		public void run() {
+			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.lastWeekDisp);
+
+			ArrayList<String> list = new ArrayList<>();
+			for (int i = 0; i < a.size(); i++) {
+				list.add((a.get(i)).Type);
+			}
+			Globals.noOfDSPType = list.size();
+			try {
+				Thread.sleep(50);
+			} catch (Exception e) {
+			}
+			Log.w("weekly dispatch", Integer.toString(list.size()));
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					weekDispText.setText(Integer.toString(Globals.noOfDSPType));
+				}
+			});
+		}
+	});
+
+
+	Thread weekOverview = new Thread(new Runnable() {
+		@Override
+		public void run() {
+			final ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.allLastWeek);
+			String text = "";
+			for (JsonObject j : a) {
+				text += "ID: " + j.Id + "\n    Start Time: " + j.StartTime + "\n    End Time: " + j.EndTime + "\n    Type: " + j.Type +
+						"\n    Code: " + j.Code + "\n    Description: " + j.Descr + "\n\n\n";
+			}
+			text += "                                                                                                                          " +
+					"                                  ";
+			Log.w("week overview", Integer.toString(a.size()));
+			final String finalText = text;
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					weekOverviewText.setText(finalText);
+				}
+			});
+		}
+	});
+
+
+	Thread extraCalls = new Thread(new Runnable() {
+		@Override
+		public void run() {
+			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.lastWeekStkDisp);
+			//Log.w("testing dsp",Integer.toString(a.size()));
+			//Log.w("Get url", Globals.mainURL + Globals.allDisp);
+			ArrayList<String> list = new ArrayList<>();
+			for (int i = 0; i < a.size(); i++) {
+				list.add((a.get(i)).Type);
+			}
+
+			Globals.noOfSDKDSPType = list.size();
+			Log.w("testing dsp", Integer.toString(list.size()));
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					extraCallsText.setText(Integer.toString(Globals.noOfSDKDSPType));
+				}
+			});
+		}
+	});
+
+
+	Thread tStop = new Thread(new Runnable() {
+		@Override
+		public void run() {
+			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.lastWeekStops);
+			//Log.w("testing dsp",Integer.toString(a.size()));
+			//Log.w("Get url", Globals.mainURL + Globals.allDisp);
+			ArrayList<String> list = new ArrayList<>();
+			for (int i = 0; i < a.size(); i++) {
+				list.add((a.get(i)).Type);
+			}
+
+			Globals.noOfTSTOPType = list.size();
+			//Log.w("testing dsp",Integer.toString(count));
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					trafficStopText.setText(Integer.toString(Globals.noOfTSTOPType));
+				}
+			});
+		}
+	});
+
+
+	Thread gn = new Thread(new Runnable() {
+		@Override
+		public void run() {
+			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.lastWeekGn);
+			ArrayList<String> list = new ArrayList<>();
+			for (int i = 0; i < a.size(); i++) {
+				list.add((a.get(i)).Code);
+			}
+
+			Globals.GN = list.size();
+			//Log.w("testing dsp",Integer.toString(count));
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					gnText.setText(Integer.toString(Globals.GN));
+				}
+			});
+		}
+	});
+
+
+	Thread threaS = new Thread(new Runnable() {
+		@Override
+		public void run() {
+			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.lastWeekThreas);
+			ArrayList<String> list = new ArrayList<>();
+			for (int i = 0; i < a.size(); i++) {
+				list.add((a.get(i)).Code);
+			}
+			Globals.THREAS = list.size();
+			//Log.w("testing dsp",Integer.toString(count));
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					suicideText.setText(Integer.toString(Globals.THREAS));
+				}
+			});
+		}
+	});
+
+
+	Thread comInt = new Thread(new Runnable() {
+		@Override
+		public void run() {
+			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.lastWeekComint);
+			ArrayList<String> list = new ArrayList<>();
+			for (int i = 0; i < a.size(); i++) {
+				list.add((a.get(i)).Code);
+			}
+
+			Globals.COMINT = list.size();
+			//Log.w("testing dsp",Integer.toString(count));
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					comIntText.setText(Integer.toString(Globals.COMINT));
+				}
+			});
+		}
+	});
+
+
+	Thread perGun = new Thread(new Runnable() {
+		@Override
+		public void run() {
+			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.lastWeekShotsF);
+			ArrayList<String> list = new ArrayList<>();
+			for (int i = 0; i < a.size(); i++) {
+				list.add((a.get(i)).Code);
+			}
+
+			Globals.perGun = list.size();
+			//Log.w("testing dsp",Integer.toString(count));
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					perGunText.setText(Integer.toString(Globals.perGun));
+				}
+			});
+		}
+	});
+
+
+	Thread perDown = new Thread(new Runnable() {
+		@Override
+		public void run() {
+			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL+ Globals.lastWeekPerDown);
+			ArrayList<String> list = new ArrayList<>();
+			for (int i = 0; i < a.size(); i++) {
+				list.add((a.get(i)).Code);
+			}
+
+			Globals.PERDOWN = list.size();
+			//Log.w("testing dsp",Integer.toString(count));
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					perDownText.setText(Integer.toString(Globals.PERDOWN));
+				}
+			});
+		}
+	});
+
+
+	Thread careerStats = new Thread(new Runnable() {
+		@Override
+		public void run() {
+			final ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.allButSched);
+			String text = "Lifetime activity (excluding hours worked):\n\n";
+			for (JsonObject j : a) {
+				text += "ID: " + j.Id + "\n    Start Time: " + j.StartTime + "\n    End Time: " + j.EndTime + "\n    Type: " + j.Type +
+						"\n    Code: " + j.Code + "\n    Description: " + j.Descr + "\n\n\n";
+			}
+			text += "                                                                                                                          " +
+					"                                  ";
+			Log.w("Career stats", Integer.toString(a.size()));
+			final String finalText = text;
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					careerStatsText.setText(finalText);
+				}
+			});
+		}
+	});
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +363,23 @@ public class MainActivity extends AppCompatActivity
 
 		insightsView = (LinearLayout) findViewById(R.id.insightsView);
 		rankingView = (LinearLayout) findViewById(R.id.rankingView);
+
 		weekView = (ScrollView) findViewById(R.id.weekView);
 		careerView = (ScrollView) findViewById(R.id.careerView);
+
 		cadUnitText = (TextView) findViewById(R.id.cadUnitText);
 		weekDispText = (TextView) findViewById(R.id.weekDispText);
 		careerStatsText = (TextView) findViewById(R.id.careerStatsText);
 		weekOverviewText = (TextView) findViewById(R.id.weekOverviewText);
+		extraCallsText = (TextView) findViewById(R.id.extraCallsText);
+		trafficStopText = (TextView) findViewById(R.id.trafficStopText);
+		shotsFiredText = (TextView) findViewById(R.id.shotsFiredText);
+		gnText = (TextView) findViewById(R.id.gnText);
+		suicideText = (TextView) findViewById(R.id.suicideText);
+		comIntText = (TextView) findViewById(R.id.comIntText);
+		perGunText = (TextView) findViewById(R.id.perGunText);
+		perDownText = (TextView) findViewById(R.id.perDownText);
+
 
 		mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
 
@@ -91,42 +399,36 @@ public class MainActivity extends AppCompatActivity
 
 		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 		navigationView.setNavigationItemSelectedListener(this);
-		//String data ="http://www.bsservicess.com/photoUpload/star_avg.php?bookName=";
-		//TextView t= (TextView)findViewById(R.id.textView5);
-		//t.setText(data);
-
-		//returnJsonArray();
-		Thread t = new Thread(new Runnable() {
+		(new Thread(new Runnable() {
 			@Override
 			public void run() {
-				weeklyDispatcherCalls();
-				averageDailyHours();
-				ExtraCalls();
-				Tstop();
-				GN();
-				THREAS();
-				COMINT();
-				PERGON();
-				PERDOWN();
+				weekOverview.start();
+				careerStats.start();
+
+				extraCalls.start();
+				tStop.start();
+				weeklyDispatcherCalls.start();
+				perGun.start();
+				perDown.start();
+				threaS.start();
+				comInt.start();
+				gn.start();
+
+				try {
+					weeklyDispatcherCalls.join();
+					tStop.join();
+					extraCalls.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
-		});
-		t.start();
-		try {
-			t.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 
-		weeklyDispatcherCalls();
-		weekOverview();
-		careerStats();
-
+		})).start();
 	}
 
 
 	public ArrayList<JsonObject> returnJsonArray(String url) {
 		try {
-			Log.w("Nate's test", url);
 			URL mainURL = new URL(url);
 			HttpURLConnection conn = (HttpURLConnection) mainURL.openConnection();
 			conn.setRequestMethod("GET");
@@ -146,453 +448,33 @@ public class MainActivity extends AppCompatActivity
 				output += a;
 
 			}
+			br.close();
 
 			conn.disconnect();
-			JSONArray jsonArr;
-			jsonArr = new JSONArray(output);
+			Globals.list.clear();
+			JSONArray jsonArr = new JSONArray(output);
 			for (int i = 0; i < jsonArr.length(); i++) {
 
 				JSONObject jsonObj = jsonArr.getJSONObject(i);
 				JsonObject data = new JsonObject(jsonObj.getString("Id"), jsonObj.getString("CadUnit"), jsonObj.getString("OrgUnit"),
 						jsonObj.getString("StartTime"), jsonObj.getString("EndTime"), jsonObj.getString("Type"), jsonObj.getString("Code"),
 						jsonObj.getString("Descr"));
-				Log.w("test asdads", data.Type);
 				Globals.list.add(data);
-				Log.w("test asdads", Integer.toString(Globals.list.size()));
-
 				/*String Id=jsonObj.getString("Id");
 				Log.w("test",Id);
 				*/
 			}
 
 			//String a=list[0].
-			Log.w("test function", Integer.toString(Globals.list.size()));
+			Log.w("test JSON return", Integer.toString(Globals.list.size()));
 
 
 		} catch (IOException | JSONException e) {
 
 			e.printStackTrace();
 		}
-		Log.w("test function", Integer.toString(Globals.list.size()));
 		return Globals.list;
 	}
-
-
-	void averageDailyHours() {
-		ArrayList<JsonObject> a = returnJsonArray("");
-		String s;
-		String[] D;
-		int yearStr;
-		int monthStr;
-		int dayStr;
-		int dayEnd;
-		int monthEnd;
-		int yearEnd;
-		int hourStr;
-		int hourEnd;
-		int minStr;
-		int minEnd;
-
-
-		int noOfHours = 0;
-		for (int i = 0; i < a.size(); i++) {
-			//String DTime=
-			//D=DTime.split("\");
-			s = a.get(i).StartTime;
-			s = (s.split(" "))[0];
-			D = s.split("/");
-			yearStr = Integer.parseInt(D[0]);
-			monthStr = Integer.parseInt(D[1]);
-			dayStr = Integer.parseInt(D[2]);
-			s = a.get(i).EndTime;
-			s = (s.split(" "))[0];
-			D = s.split("/");
-			dayEnd = Integer.parseInt(D[2]);
-			monthEnd = Integer.parseInt(D[1]);
-			dayEnd = Integer.parseInt(D[2]);
-
-			s = a.get(i).StartTime;
-			s = (s.split(" "))[2];
-			D = s.split(":");
-			minStr = Integer.parseInt(D[1]);
-			hourStr = Integer.parseInt(D[0]);
-			s = a.get(i).EndTime;
-			s = (s.split(" "))[2];
-			D = s.split(":");
-			minEnd = Integer.parseInt(D[1]);
-			hourEnd = Integer.parseInt(D[0]);
-
-			//Not considering edge cases and minutes
-			if ((dayStr - dayEnd) > 1) {
-				noOfHours += (dayStr - dayEnd - 1) * 24;
-				noOfHours += (24 - hourStr) + hourEnd;
-			} else if ((dayStr - dayEnd) == 1) {
-				noOfHours += (24 - hourStr) + hourEnd;
-			} else {
-				noOfHours += hourStr - hourEnd;
-			}
-			Globals.averageDailyHours = noOfHours;
-
-			(new Thread(new Runnable() {
-				@Override
-				public void run() {
-					ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.allSched);
-					String s;
-					String[] D;
-					int yearStr;
-					int monthStr;
-					int dayStr;
-					int dayEnd;
-					int monthEnd;
-					int yearEnd;
-					int hourStr;
-					int hourEnd;
-					int minStr;
-					int minEnd;
-
-
-					int noOfHours = 0;
-					for (int i = 0; i <= a.size(); i++) {
-
-						s = a.get(i).StartTime;
-
-						s = (s.split(" "))[0];
-						Log.w("s", s);
-						D = s.split("-");
-						Log.w("D[0]", D[0]);
-						yearStr = Integer.parseInt(D[0]);
-						monthStr = Integer.parseInt(D[1]);
-						dayStr = Integer.parseInt(D[2]);
-						s = a.get(i).EndTime;
-
-						s = (s.split(" "))[0];
-						Log.w("s", s);
-						D = s.split("-");
-						dayEnd = Integer.parseInt(D[2]);
-						monthEnd = Integer.parseInt(D[1]);
-						dayEnd = Integer.parseInt(D[2]);
-
-						s = a.get(i).StartTime;
-
-						s = (s.split(" "))[2];
-						D = s.split(":");
-						minStr = Integer.parseInt(D[1]);
-						hourStr = Integer.parseInt(D[0]);
-						Log.w("s", Integer.toString(hourStr));
-						s = a.get(i).EndTime;
-
-						s = (s.split(" "))[2];
-						D = s.split(":");
-						minEnd = Integer.parseInt(D[1]);
-						hourEnd = Integer.parseInt(D[0]);
-
-						//Not considering edge cases and minutes
-						if ((dayStr - dayEnd) > 1) {
-							noOfHours += (dayStr - dayEnd - 1) * 24;
-							noOfHours += (24 - hourStr) + hourEnd;
-						} else if ((dayStr - dayEnd) == 1) {
-							noOfHours += (24 - hourStr) + hourEnd;
-						} else {
-							noOfHours += -(hourStr - hourEnd);
-						}
-						Globals.averageDailyHours = noOfHours;
-						//Log.w("hours", Double.toString(Globals.averageDailyHours = noOfHours));
-					}
-				}
-			})).start();
-
-		}
-	}
-
-
-	void weeklyDispatcherCalls() {
-		(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.lastWeekDisp);
-
-				ArrayList<String> list = new ArrayList<>();
-				for (int i = 0; i < a.size(); i++) {
-					list.add((a.get(i)).Type);
-				}
-				Globals.noOfDSPType = list.size();
-				try {
-					Thread.sleep(50);
-				} catch (Exception e) {
-				}
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						weekDispText.setText(Integer.toString(Globals.noOfDSPType));
-					}
-				});
-			}
-		})).start();
-
-	}
-
-
-	void weekOverview() {
-		(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				final ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.allLastWeek);
-				String text = "";
-				for (JsonObject j : a) {
-					text += "ID: " + j.Id + "\n    Start Time: " + j.StartTime + "\n    End Time: " + j.EndTime + "\n    Type: " + j.Type +
-							"\n    Code: " + j.Code + "\n    Description: " + j.Descr + "\n\n\n";
-				}
-				text += "                                                                                                                          " +
-						"                                  ";
-				final String finalText = text;
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						weekOverviewText.setText(finalText);
-					}
-				});
-			}
-		})).start();
-	}
-
-
-	void ExtraCalls() {
-		(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.allDisp);
-				//Log.w("testing dsp",Integer.toString(a.size()));
-				//Log.w("Get url", Globals.mainURL + Globals.allDisp);
-				ArrayList<String> list = new ArrayList<>();
-				for (int i = 0; i < a.size(); i++) {
-					list.add((a.get(i)).Type);
-				}
-				int count = 0;
-				for (int i = 0; i < list.size(); i++) {
-					if (list.get(i).equals("SDKDSP")) {
-						count++;
-					}
-				}
-				Globals.noOfSDKDSPType = count;
-				//Log.w("testing dsp",Integer.toString(count));
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-
-					}
-				});
-			}
-		})).start();
-
-	}
-
-
-	void Tstop() {
-		(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.allDisp);
-				//Log.w("testing dsp",Integer.toString(a.size()));
-				//Log.w("Get url", Globals.mainURL + Globals.allDisp);
-				ArrayList<String> list = new ArrayList<>();
-				for (int i = 0; i < a.size(); i++) {
-					list.add((a.get(i)).Type);
-				}
-				int count = 0;
-				for (int i = 0; i < list.size(); i++) {
-					if (list.get(i).equals("TSTOP")) {
-						count++;
-					}
-				}
-				Globals.noOfTSTOPType = count;
-				//Log.w("testing dsp",Integer.toString(count));
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-
-					}
-				});
-			}
-		})).start();
-
-	}
-
-
-	void GN() {
-		(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.allDisp);
-				//Log.w("testing dsp",Integer.toString(a.size()));
-				//Log.w("Get url", Globals.mainURL + Globals.allDisp);
-				ArrayList<String> list = new ArrayList<>();
-				for (int i = 0; i < a.size(); i++) {
-					list.add((a.get(i)).Code);
-				}
-				int count = 0;
-				for (int i = 0; i < list.size(); i++) {
-					if (list.get(i).equals("GN")) {
-						count++;
-					}
-				}
-				Globals.GN = count;
-				//Log.w("testing dsp",Integer.toString(count));
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-
-					}
-				});
-			}
-		})).start();
-
-	}
-
-
-	void THREAS() {
-		(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.allDisp);
-				//Log.w("testing dsp",Integer.toString(a.size()));
-				//Log.w("Get url", Globals.mainURL + Globals.allDisp);
-				ArrayList<String> list = new ArrayList<>();
-				for (int i = 0; i < a.size(); i++) {
-					list.add((a.get(i)).Code);
-				}
-				int count = 0;
-				for (int i = 0; i < list.size(); i++) {
-					if (list.get(i).equals("THREAS")) {
-						count++;
-					}
-				}
-				Globals.THREAS = count;
-				//Log.w("testing dsp",Integer.toString(count));
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-
-					}
-				});
-			}
-		})).start();
-
-	}
-
-
-	void COMINT() {
-		(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.allDisp);
-				//Log.w("testing dsp",Integer.toString(a.size()));
-				//Log.w("Get url", Globals.mainURL + Globals.allDisp);
-				ArrayList<String> list = new ArrayList<>();
-				for (int i = 0; i < a.size(); i++) {
-					list.add((a.get(i)).Code);
-				}
-				int count = 0;
-				for (int i = 0; i < list.size(); i++) {
-					if (list.get(i).equals("COMINT")) {
-						count++;
-					}
-				}
-				Globals.COMINT = count;
-				//Log.w("testing dsp",Integer.toString(count));
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-
-					}
-				});
-			}
-		})).start();
-
-	}
-
-
-	void PERGON() {
-		(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.allDisp);
-				//Log.w("testing dsp",Integer.toString(a.size()));
-				//Log.w("Get url", Globals.mainURL + Globals.allDisp);
-				ArrayList<String> list = new ArrayList<>();
-				for (int i = 0; i < a.size(); i++) {
-					list.add((a.get(i)).Code);
-				}
-				int count = 0;
-				for (int i = 0; i < list.size(); i++) {
-					if (list.get(i).equals("PERGON")) {
-						count++;
-					}
-				}
-				Globals.PERGON = count;
-				//Log.w("testing dsp",Integer.toString(count));
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-
-					}
-				});
-			}
-		})).start();
-	}
-
-
-	void PERDOWN() {
-		(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.allDisp);
-				//Log.w("testing dsp",Integer.toString(a.size()));
-				//Log.w("Get url", Globals.mainURL + Globals.allDisp);
-				ArrayList<String> list = new ArrayList<>();
-				for (int i = 0; i < a.size(); i++) {
-					list.add((a.get(i)).Code);
-				}
-				int count = 0;
-				for (int i = 0; i < list.size(); i++) {
-					if (list.get(i).equals("PERDOW")) {
-						count++;
-					}
-				}
-				Globals.PERDOWN = count;
-				//Log.w("testing dsp",Integer.toString(count));
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-					}
-				});
-			}
-		})).start();
-	}
-
-
-	void careerStats() {
-		(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				final ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.allButSched);
-				String text = "Lifetime activity (excluding hours worked):\n\n";
-				for (JsonObject j : a) {
-					text += "ID: " + j.Id + "\n    Start Time: " + j.StartTime + "\n    End Time: " + j.EndTime + "\n    Type: " + j.Type +
-							"\n    Code: " + j.Code + "\n    Description: " + j.Descr + "\n\n\n";
-				}
-				text += "                                                                                                                          " +
-						"                                  ";
-				final String finalText = text;
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						careerStatsText.setText(finalText);
-					}
-				});
-			}
-		})).start();
-	}
-
 
 	@Override
 	public void onBackPressed() {

@@ -12,15 +12,15 @@ public class Globals {
 
 	volatile static ArrayList<JsonObject> list = new ArrayList<>();
 
-	static int averageDailyHours=0;
-	static int noOfSDKDSPType=0;
-	static int noOfTSTOPType=0;
-	static int SHOTSF=0;
-	static int GN=0;
-	static int THREAS=0;
-	static int COMINT=0;
-	static int PERGON=0;
-	static int PERDOWN=0;
+	volatile static int averageDailyHours = 0;
+	volatile static int noOfSDKDSPType = 0;
+	volatile static int noOfTSTOPType = 0;
+	volatile static int SHOTSF = 0;
+	volatile static int GN = 0;
+	volatile static int THREAS = 0;
+	volatile static int COMINT = 0;
+	volatile static int perGun = 0;
+	volatile static int PERDOWN = 0;
 
 	volatile static int noOfDSPType = 0;
 
@@ -28,7 +28,7 @@ public class Globals {
 	static String mainURL = "http://claritybm5.azurewebsites.net/odata/Events?$filter=CadUnit%20eq%20%27PN007%27";
 	static String username = "NULL";
 
-  static final String allButSched = "%20and%20Type%20ne%20%27SCHED%27&$orderby=StartTime%20asc";
+	static final String allButSched = "%20and%20Type%20ne%20%27SCHED%27&$orderby=StartTime%20asc";
 	static final String allLastWeek = "%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20add%207%20gt%2031&$orderby=StartTime%20asc";
 	static final String allStat = "$orderby=StartTime%20asc";
 	static final String allSched = "%20and%20Type%20eq%20%27SCHED%27&$orderby=StartTime%20asc";
@@ -48,8 +48,9 @@ public class Globals {
 	static final String allThreas = "%20and%20Code%20eq%20%27THREAS%27&$orderby=StartTime%20asc";
 	static final String lastWeekThreas = "%20and%20Code%20eq%20%27THREAS%27%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20add%207%20gt%2031&$orderby=StartTime%20asc";
 	static final String allComint = "%20and%20Code%20eq%20%27COMINT%27&$orderby=StartTime%20asc";
-	static final String lastWeekComint =  "%20and%20Code%20eq%20%27COMINT%27%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20add%207%20gt%2031&$orderby=StartTime%20asc";
+	static final String lastWeekComint = "%20and%20Code%20eq%20%27COMINT%27%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20add%207%20gt%2031&$orderby=StartTime%20asc";
 	static final String allGn = "%20and%20Code%20eq%20%27GN%27&$orderby=StartTime%20asc";
 	static final String lastWeekGn = "%20and%20Code%20eq%20%27GN%27%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20add%207%20gt%2031&$orderby=StartTime%20asc";
-	}
+	static final String lastWeekPerDown = "%20and%20Code%20eq%20%27PERDOW%27%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20add%207%20gt%2031&$orderby=StartTime%20asc";
+}
 
