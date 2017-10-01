@@ -90,15 +90,25 @@ public class MainActivity extends AppCompatActivity
 		//t.setText(data);
 
 		//returnJsonArray();
-		weeklyDispatcherCalls();
-		averageDailyHours();
-		ExtraCalls();
-		Tstop();
-		GN();
-		THREAS();
-		COMINT();
-		PERGON();
-		PERDOWN();
+		Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				weeklyDispatcherCalls();
+				averageDailyHours();
+				ExtraCalls();
+				Tstop();
+				GN();
+				THREAS();
+				COMINT();
+				PERGON();
+				PERDOWN();
+			}});
+		t.start();
+		try {
+			t.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
   
   
