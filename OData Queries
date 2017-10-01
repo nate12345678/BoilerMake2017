@@ -1,9 +1,10 @@
 http://claritybm5.azurewebsites.net/odata/Events?
 
 Queries:
-$top=(number of results) (ex. $top=100)
+$top=(Number of results) (ex. $top=100)
 $filter=(Parameter)%20eq%20(parameter) (ex. $filter=Type%20eq%20%27DSP%27)
-$orderby=(Parameter)(asc/desc) (ex. $orderby=Id%20asc)
+$orderby=(Parameter)%20(asc/desc) (ex. $orderby=Id%20asc)
+$skip=(Number of skipped) (ex. $skip=5000)
 
 Functions:
 day(StartTime/EndTime)%20=%20(numDay)
