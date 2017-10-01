@@ -74,7 +74,7 @@
         android:id="@+id/textView11"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Gangs/Narcotics"/>
+        android:text="Gangs/Narcotics Calls:"/>
 
     <TextView
         android:id="@+id/gnText"
@@ -113,7 +113,7 @@
         android:id="@+id/textView17"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Gun Threats Handled"/>
+        android:text="Gun Threats Handled:"/>
 
     <TextView
         android:id="@+id/perGunText"

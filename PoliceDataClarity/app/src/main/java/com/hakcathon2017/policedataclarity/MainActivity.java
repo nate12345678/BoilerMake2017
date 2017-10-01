@@ -284,7 +284,7 @@ public class MainActivity extends AppCompatActivity
 	Thread perGun = new Thread(new Runnable() {
 		@Override
 		public void run() {
-			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.lastWeekShotsF);
+			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.lastWeekPergun);
 			ArrayList<String> list = new ArrayList<>();
 			for (int i = 0; i < a.size(); i++) {
 				list.add((a.get(i)).Code);
@@ -305,7 +305,7 @@ public class MainActivity extends AppCompatActivity
 	Thread perDown = new Thread(new Runnable() {
 		@Override
 		public void run() {
-			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL+ Globals.lastWeekPerDown);
+			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL+ Globals.lastWeekPerdown);
 			ArrayList<String> list = new ArrayList<>();
 			for (int i = 0; i < a.size(); i++) {
 				list.add((a.get(i)).Code);
