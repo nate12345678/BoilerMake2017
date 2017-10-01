@@ -19,19 +19,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import javax.xml.parsers.SAXParserFactory;
-
-import static android.R.id.list;
+import static com.hakcathon2017.policedataclarity.Globals.mainURL;
 
 
 public class MainActivity extends AppCompatActivity
@@ -61,7 +59,7 @@ public class MainActivity extends AppCompatActivity
 			finish();
 		}
 
-		Globals.mainURL = "http://claritybm5.azurewebsites.net/odata/Events?$filter=CadUnit%20eq%20%27" + Globals.username + "%27";
+		mainURL = "http://claritybm5.azurewebsites.net/odata/Events?$filter=CadUnit%20eq%20%27" + Globals.username + "%27";
 
 		insightsView = (LinearLayout) findViewById(R.id.insightsView);
 		rankingView = (LinearLayout) findViewById(R.id.rankingView);
@@ -92,77 +90,58 @@ public class MainActivity extends AppCompatActivity
 		//t.setText(data);
 
 		//returnJsonArray();
-		weeklyDispatcherCalls("dfdf");
+		weeklyDispatcherCalls();
 
 	}
   
   
 	public ArrayList<JsonObject> returnJsonArray(String url) {
+		try {
+			Log.w("Nate's test", url);
+			URL mainURL = new URL(url);
+			HttpURLConnection conn = (HttpURLConnection) mainURL.openConnection();
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("Accept", "application/json");
 
-		final String finalURL = url;
+			if (conn.getResponseCode() != 200) {
+				//Log.e("ConnectionError", "Failed : HTTP error code : " + conn.getResponseCode());
+				throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+			}
+			BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 
-		(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Log.w("Nate's test",finalURL);
-					String mainURL = finalURL;
-
-					URL url = new URL(mainURL);
-					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-					conn.setRequestMethod("GET");
-					conn.setRequestProperty("Accept", "application/json");
-
-					if (conn.getResponseCode() != 200) {
-						//Log.e("ConnectionError", "Failed : HTTP error code : " + conn.getResponseCode());
-						throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
-					}
-					BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-
-					String output = "";
-					String a;
-					//System.out.println("Output from Server .... \n");
-					while ((a = br.readLine()) != null) {
-						//System.out.println(a);
-						output += a;
-
-					}
-
-					conn.disconnect();
-					JSONArray jsonArr;
-
-
-					try{
-						jsonArr = new JSONArray(output);
-						for (int i = 0; i < jsonArr.length(); i++) {
-
-							JSONObject jsonObj = jsonArr.getJSONObject(i);
-							JsonObject data = new JsonObject(jsonObj.getString("Id"),jsonObj.getString("CadUnit"),jsonObj.getString("OrgUnit"),jsonObj.getString("StartTime"),jsonObj.getString("EndTime"),jsonObj.getString("Type"),jsonObj.getString("Code"),jsonObj.getString("Descr"));
-							Log.w("test asdads",data.Type);
-							Globals.list.add(data);
-							Log.w("test asdads",Integer.toString(Globals.list.size()));
-
-							/*String Id=jsonObj.getString("Id");
-							Log.w("test",Id);
-							*/
-						}
-
-						//String a=list[0].
-						Log.w("test function",Integer.toString(Globals.list.size()));
-					}catch (Exception e){}
-
-
-				} catch (MalformedURLException e) {
-
-					e.printStackTrace();
-				} catch (IOException e) {
-
-					e.printStackTrace();
-
-				}
+			String output = "";
+			String a;
+			//System.out.println("Output from Server .... \n");
+			while ((a = br.readLine()) != null) {
+				//System.out.println(a);
+				output += a;
 
 			}
-		})).start();
+
+			conn.disconnect();
+			JSONArray jsonArr;
+			jsonArr = new JSONArray(output);
+			for (int i = 0; i < jsonArr.length(); i++) {
+
+				JSONObject jsonObj = jsonArr.getJSONObject(i);
+				JsonObject data = new JsonObject(jsonObj.getString("Id"),jsonObj.getString("CadUnit"),jsonObj.getString("OrgUnit"),jsonObj.getString("StartTime"),jsonObj.getString("EndTime"),jsonObj.getString("Type"),jsonObj.getString("Code"),jsonObj.getString("Descr"));
+				Log.w("test asdads",data.Type);
+				Globals.list.add(data);
+				Log.w("test asdads",Integer.toString(Globals.list.size()));
+
+				/*String Id=jsonObj.getString("Id");
+				Log.w("test",Id);
+				*/
+			}
+
+			//String a=list[0].
+			Log.w("test function",Integer.toString(Globals.list.size()));
+
+
+		} catch (IOException |JSONException e) {
+
+			e.printStackTrace();
+		}
 		Log.w("test function",Integer.toString(Globals.list.size()));
 		return Globals.list;
 	}
@@ -230,21 +209,34 @@ public class MainActivity extends AppCompatActivity
 		}
 
 	}
-	public void weeklyDispatcherCalls(String url){
-		ArrayList<JsonObject> a= returnJsonArray("http://claritybm5.azurewebsites.net/odata/Events?$top=100&%20and%20Type%20eq%20%27SCHED%27%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20sub%207%20eq%2022&$orderby=StartTime%20asc");
-		Log.w("testing dsp",Integer.toString(a.size()));
-		ArrayList<String> list = new ArrayList<String>();
-		for(int i = 0; i < a.size(); i++){
-			list.add((a.get(i)).Type);
-		}
-		int count = 0;
-		for(int i = 0; i < list.size(); i++){
-			if(list.get(i).equals("DSP")){
-				count++;
+	public void weeklyDispatcherCalls(){
+		(new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ArrayList<JsonObject> a= returnJsonArray(Globals.mainURL + Globals.allDisp);
+				Log.w("testing dsp",Integer.toString(a.size()));
+				Log.w("Get url", Globals.mainURL + Globals.allDisp);
+				ArrayList<String> list = new ArrayList<>();
+				for(int i = 0; i < a.size(); i++){
+					list.add((a.get(i)).Type);
+				}
+				int count = 0;
+				for(int i = 0; i < list.size(); i++){
+					if(list.get(i).equals("DSP")){
+						count++;
+					}
+				}
+				Globals.noOfDSPType=count;
+				Log.w("testing dsp",Integer.toString(count));
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+
+					}
+				});
 			}
-		}
-		Globals.noOfDSPType=count;
-		Log.w("testing dsp",Integer.toString(count));
+		})).start();
+
 	}
 
 
