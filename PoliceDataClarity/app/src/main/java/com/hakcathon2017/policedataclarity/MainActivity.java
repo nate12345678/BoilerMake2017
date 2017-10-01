@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity
 		int minEnd;
 
 
-		float noOfHours = 0;
+		int noOfHours = 0;
 		for (int i = 0; i < a.size(); i++) {
 			//String DTime=
 			//D=DTime.split("\");
@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity
 					int minEnd;
 
 
-					float noOfHours = 0;
+					int noOfHours = 0;
 					for (int i = 0; i <= a.size(); i++) {
 
 						s = a.get(i).StartTime;

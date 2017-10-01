@@ -11,18 +11,17 @@ import java.util.ArrayList;
 public class Globals {
 
 	volatile static ArrayList<JsonObject> list = new ArrayList<>();
-	static float averageDailyHours=0;
-	static float noOfDSPType=0;
-	static float noOfSDKDSPType=0;
-	static float noOfTSTOPType=0;
-	static float SHOTSF=0;
-	static float GN=0;
-	static float THREAS=0;
-	static float COMINT=0;
-	static float PERGON=0;
-	static float PERDOWN=0;
 
-  static double averageDailyHours = 0;
+	static int averageDailyHours=0;
+	static int noOfSDKDSPType=0;
+	static int noOfTSTOPType=0;
+	static int SHOTSF=0;
+	static int GN=0;
+	static int THREAS=0;
+	static int COMINT=0;
+	static int PERGON=0;
+	static int PERDOWN=0;
+
 	volatile static int noOfDSPType = 0;
 
 	static String precinct = "";
