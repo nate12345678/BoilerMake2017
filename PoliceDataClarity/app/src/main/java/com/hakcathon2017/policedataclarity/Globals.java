@@ -19,7 +19,7 @@ public class Globals {
 	static String username = "NULL";
 
   static final String allButSched = "%20and%20Type%20ne%20%27SCHED%27&$orderby=StartTime%20asc";
-	static final String allLastWeek = "%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20add%207%20gt%2031&$orderby=StartTime%20asc"
+	static final String allLastWeek = "%20and%20month(StartTime)%20eq%208%20and%20day(StartTime)%20add%207%20gt%2031&$orderby=StartTime%20asc";
 	static final String allStat = "$orderby=StartTime%20asc";
 	static final String allSched = "%20and%20Type%20eq%20%27SCHED%27&$orderby=StartTime%20asc";
 	static final String amountDaysSched = "%20and%20Type%20eq%20%27SCHED%27%20and%20month(StartTime)%20eq%206%20and%20day(StartTime)%20ge%201%20and%20day(StartTime)%20le%207&$orderby=StartTime%20asc";

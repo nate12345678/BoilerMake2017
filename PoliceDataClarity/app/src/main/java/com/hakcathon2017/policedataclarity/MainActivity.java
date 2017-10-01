@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity
 	LinearLayout insightsView;
 	LinearLayout rankingView;
 	ScrollView weekView;
-	LinearLayout careerView;
+	ScrollView careerView;
 	RelativeLayout mainLayout;
 
 	Toolbar toolbar;
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity
 	TextView cadUnitText;
 	TextView weekDispText;
 	TextView weekOverviewText;
+	TextView careerStatsText;
 
 
 	@Override
@@ -66,10 +67,12 @@ public class MainActivity extends AppCompatActivity
 		insightsView = (LinearLayout) findViewById(R.id.insightsView);
 		rankingView = (LinearLayout) findViewById(R.id.rankingView);
 		weekView = (ScrollView) findViewById(R.id.weekView);
-		careerView = (LinearLayout) findViewById(R.id.careerView);
+		careerView = (ScrollView) findViewById(R.id.careerView);
 		cadUnitText = (TextView) findViewById(R.id.cadUnitText);
 		weekDispText = (TextView) findViewById(R.id.weekDispText);
+		careerStatsText = (TextView) findViewById(R.id.careerStatsText);
 		weekOverviewText = (TextView) findViewById(R.id.weekOverviewText);
+
 		mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
 
 		rankingView.setVisibility(View.GONE);
@@ -95,6 +98,7 @@ public class MainActivity extends AppCompatActivity
 		//returnJsonArray();
 		weeklyDispatcherCalls();
 		weekOverview();
+		careerStats();
 
 	}
 
@@ -224,6 +228,9 @@ public class MainActivity extends AppCompatActivity
 					list.add((a.get(i)).Type);
 				}
 				Globals.noOfDSPType = list.size();
+				try{
+					Thread.sleep(50);
+				} catch (Exception e){}
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -264,7 +271,7 @@ public class MainActivity extends AppCompatActivity
 		(new Thread(new Runnable() {
 			@Override
 			public void run() {
-				final ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.allLastWeek);
+				final ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.allButSched);
 				String text = "Lifetime activity (excluding hours worked):\n\n";
 				for (JsonObject j : a) {
 					text += "ID: " + j.Id + "\n    Start Time: " + j.StartTime + "\n    End Time: " + j.EndTime + "\n    Type: " + j.Type +
@@ -276,7 +283,7 @@ public class MainActivity extends AppCompatActivity
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						weekOverviewText.setText(finalText);
+						careerStatsText.setText(finalText);
 					}
 				});
 			}
