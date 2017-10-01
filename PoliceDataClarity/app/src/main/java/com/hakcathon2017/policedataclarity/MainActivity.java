@@ -130,16 +130,12 @@ public class MainActivity extends AppCompatActivity
 		public void run() {
 			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.lastWeekDisp);
 
-			ArrayList<String> list = new ArrayList<>();
-			for (int i = 0; i < a.size(); i++) {
-				list.add((a.get(i)).Type);
-			}
-			Globals.noOfDSPType = list.size();
+			Globals.noOfDSPType = a.size();
 			try {
 				Thread.sleep(50);
 			} catch (Exception e) {
 			}
-			Log.w("weekly dispatch", Integer.toString(list.size()));
+			Log.w("weekly dispatch", Integer.toString(a.size()));
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -177,15 +173,9 @@ public class MainActivity extends AppCompatActivity
 		@Override
 		public void run() {
 			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.lastWeekStkDisp);
-			//Log.w("testing dsp",Integer.toString(a.size()));
-			//Log.w("Get url", Globals.mainURL + Globals.allDisp);
-			ArrayList<String> list = new ArrayList<>();
-			for (int i = 0; i < a.size(); i++) {
-				list.add((a.get(i)).Type);
-			}
 
-			Globals.noOfSDKDSPType = list.size();
-			Log.w("testing dsp", Integer.toString(list.size()));
+			Globals.noOfSDKDSPType = a.size();
+			Log.w("testing extraCalls", Integer.toString(a.size()));
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -200,15 +190,8 @@ public class MainActivity extends AppCompatActivity
 		@Override
 		public void run() {
 			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.lastWeekStops);
-			//Log.w("testing dsp",Integer.toString(a.size()));
-			//Log.w("Get url", Globals.mainURL + Globals.allDisp);
-			ArrayList<String> list = new ArrayList<>();
-			for (int i = 0; i < a.size(); i++) {
-				list.add((a.get(i)).Type);
-			}
-
-			Globals.noOfTSTOPType = list.size();
-			//Log.w("testing dsp",Integer.toString(count));
+			Globals.noOfTSTOPType = a.size();
+			Log.w("testing tstop", Integer.toString(a.size()));
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -223,13 +206,8 @@ public class MainActivity extends AppCompatActivity
 		@Override
 		public void run() {
 			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.lastWeekGn);
-			ArrayList<String> list = new ArrayList<>();
-			for (int i = 0; i < a.size(); i++) {
-				list.add((a.get(i)).Code);
-			}
-
-			Globals.GN = list.size();
-			//Log.w("testing dsp",Integer.toString(count));
+			Globals.GN = a.size();
+			Log.w("testing dsp", Integer.toString(a.size()));
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -244,12 +222,8 @@ public class MainActivity extends AppCompatActivity
 		@Override
 		public void run() {
 			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.lastWeekThreas);
-			ArrayList<String> list = new ArrayList<>();
-			for (int i = 0; i < a.size(); i++) {
-				list.add((a.get(i)).Code);
-			}
-			Globals.THREAS = list.size();
-			//Log.w("testing dsp",Integer.toString(count));
+			Globals.THREAS = a.size();
+			Log.w("testing threas", Integer.toString(a.size()));
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -264,13 +238,8 @@ public class MainActivity extends AppCompatActivity
 		@Override
 		public void run() {
 			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.lastWeekComint);
-			ArrayList<String> list = new ArrayList<>();
-			for (int i = 0; i < a.size(); i++) {
-				list.add((a.get(i)).Code);
-			}
-
-			Globals.COMINT = list.size();
-			//Log.w("testing dsp",Integer.toString(count));
+			Globals.COMINT = a.size();
+			Log.w("testing comint", Integer.toString(a.size()));
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -285,13 +254,8 @@ public class MainActivity extends AppCompatActivity
 		@Override
 		public void run() {
 			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL + Globals.lastWeekPergun);
-			ArrayList<String> list = new ArrayList<>();
-			for (int i = 0; i < a.size(); i++) {
-				list.add((a.get(i)).Code);
-			}
-
-			Globals.perGun = list.size();
-			//Log.w("testing dsp",Integer.toString(count));
+			Globals.perGun = a.size();
+			Log.w("testing pergun", Integer.toString(a.size()));
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -306,13 +270,8 @@ public class MainActivity extends AppCompatActivity
 		@Override
 		public void run() {
 			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL+ Globals.lastWeekPerdown);
-			ArrayList<String> list = new ArrayList<>();
-			for (int i = 0; i < a.size(); i++) {
-				list.add((a.get(i)).Code);
-			}
-
-			Globals.PERDOWN = list.size();
-			//Log.w("testing dsp",Integer.toString(count));
+			Globals.PERDOWN = a.size();
+			Log.w("testing perdown", Integer.toString(a.size()));
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -322,6 +281,20 @@ public class MainActivity extends AppCompatActivity
 		}
 	});
 
+	Thread shotsF = new Thread(new Runnable() {
+		@Override
+		public void run() {
+			ArrayList<JsonObject> a = returnJsonArray(Globals.mainURL+ Globals.lastWeekShotsF);
+			Globals.shotsF = a.size();
+			Log.w("testing shotsf", Integer.toString(a.size()));
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					shotsFiredText.setText(Integer.toString(Globals.shotsF));
+				}
+			});
+		}
+	});
 
 	Thread careerStats = new Thread(new Runnable() {
 		@Override
@@ -356,6 +329,39 @@ public class MainActivity extends AppCompatActivity
 		if (Globals.username.equals("NULL")) {
 			startActivity(new Intent(getApplicationContext(), LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
 			finish();
+		} else {
+			(new Thread(new Runnable() {
+				@Override
+				public void run() {
+					weekOverview.start();
+					careerStats.start();
+
+
+					try {
+						extraCalls.start();
+						extraCalls.join();
+						weeklyDispatcherCalls.start();
+						weeklyDispatcherCalls.join();
+						tStop.start();
+						tStop.join();
+						perGun.start();
+						perGun.join();
+						perDown.start();
+						perDown.join();
+						threaS.start();
+						threaS.join();
+						comInt.start();
+						comInt.join();
+						gn.start();
+						gn.join();
+						shotsF.start();
+						shotsF.join();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+
+			})).start();
 		}
 
 		Globals.mainURL = "http://claritybm5.azurewebsites.net/odata/Events?$filter=CadUnit%20eq%20%27" + Globals.username + "%27";
@@ -399,35 +405,12 @@ public class MainActivity extends AppCompatActivity
 
 		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 		navigationView.setNavigationItemSelectedListener(this);
-		(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				weekOverview.start();
-				careerStats.start();
 
-				extraCalls.start();
-				tStop.start();
-				weeklyDispatcherCalls.start();
-				perGun.start();
-				perDown.start();
-				threaS.start();
-				comInt.start();
-				gn.start();
-
-				try {
-					weeklyDispatcherCalls.join();
-					tStop.join();
-					extraCalls.join();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-
-		})).start();
 	}
 
 
 	public ArrayList<JsonObject> returnJsonArray(String url) {
+		ArrayList<JsonObject> list = new ArrayList<>();
 		try {
 			URL mainURL = new URL(url);
 			HttpURLConnection conn = (HttpURLConnection) mainURL.openConnection();
@@ -451,7 +434,7 @@ public class MainActivity extends AppCompatActivity
 			br.close();
 
 			conn.disconnect();
-			Globals.list.clear();
+			list.clear();
 			JSONArray jsonArr = new JSONArray(output);
 			for (int i = 0; i < jsonArr.length(); i++) {
 
@@ -459,21 +442,21 @@ public class MainActivity extends AppCompatActivity
 				JsonObject data = new JsonObject(jsonObj.getString("Id"), jsonObj.getString("CadUnit"), jsonObj.getString("OrgUnit"),
 						jsonObj.getString("StartTime"), jsonObj.getString("EndTime"), jsonObj.getString("Type"), jsonObj.getString("Code"),
 						jsonObj.getString("Descr"));
-				Globals.list.add(data);
+				list.add(data);
 				/*String Id=jsonObj.getString("Id");
 				Log.w("test",Id);
 				*/
 			}
 
 			//String a=list[0].
-			Log.w("test JSON return", Integer.toString(Globals.list.size()));
+			Log.w("test JSON return", Integer.toString(list.size()));
 
 
 		} catch (IOException | JSONException e) {
 
 			e.printStackTrace();
 		}
-		return Globals.list;
+		return list;
 	}
 
 	@Override

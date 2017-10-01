@@ -10,12 +10,12 @@ import java.util.ArrayList;
 
 public class Globals {
 
-	volatile static ArrayList<JsonObject> list = new ArrayList<>();
+
 
 	volatile static int averageDailyHours = 0;
 	volatile static int noOfSDKDSPType = 0;
 	volatile static int noOfTSTOPType = 0;
-	volatile static int SHOTSF = 0;
+	volatile static int shotsF = 0;
 	volatile static int GN = 0;
 	volatile static int THREAS = 0;
 	volatile static int COMINT = 0;
