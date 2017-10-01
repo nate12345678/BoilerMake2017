@@ -1,0 +1,6 @@
+public int scoreCalculator{
+	    int score = 0;
+        score = (averageDailyHours*10)+(noOfDSPType*20)+(noOfSDKDSPType*5)+(noOfTSTOPType*10)+(SHOTSF*2)+(GN*2)+(THREAS*2)+(COMINT*2)+(PERGON*2)+(PERDOWN*2)
+        return score;
+
+	}
