@@ -13,6 +13,14 @@ public class Globals {
 	volatile static ArrayList<JsonObject> list = new ArrayList<>();
 	static float averageDailyHours=0;
 	static float noOfDSPType=0;
+	static float noOfSDKDSPType=0;
+	static float noOfTSTOPType=0;
+	static float SHOTSF=0;
+	static float GN=0;
+	static float THREAS=0;
+	static float COMINT=0;
+	static float PERGON=0;
+	static float PERDOW=0;
 	static String mainURL = "http://claritybm5.azurewebsites.net/odata/Events?$filter=CadUnit%20eq%20%27PN007%27";
 
 	final static String allSched = "%20and%20Type%20eq%20%27SCHED%27&$orderby=StartTime%20asc";

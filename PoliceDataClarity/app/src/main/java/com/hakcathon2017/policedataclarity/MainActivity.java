@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity
 						count++;
 					}
 				}
-				Globals.noOfDSPType=count;
+				Globals.noOfSDKDSPType=count;
 				//Log.w("testing dsp",Integer.toString(count));
 				runOnUiThread(new Runnable() {
 					@Override
@@ -294,7 +294,152 @@ public class MainActivity extends AppCompatActivity
 						count++;
 					}
 				}
-				Globals.noOfDSPType=count;
+				Globals.noOfTSTOPType=count;
+				//Log.w("testing dsp",Integer.toString(count));
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+
+					}
+				});
+			}
+		})).start();
+
+	}
+	public void GN(){
+		(new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ArrayList<JsonObject> a= returnJsonArray(Globals.mainURL + Globals.allDisp);
+				//Log.w("testing dsp",Integer.toString(a.size()));
+				//Log.w("Get url", Globals.mainURL + Globals.allDisp);
+				ArrayList<String> list = new ArrayList<>();
+				for(int i = 0; i < a.size(); i++){
+					list.add((a.get(i)).Code);
+				}
+				int count = 0;
+				for(int i = 0; i < list.size(); i++){
+					if(list.get(i).equals("GN")){
+						count++;
+					}
+				}
+				Globals.GN=count;
+				//Log.w("testing dsp",Integer.toString(count));
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+
+					}
+				});
+			}
+		})).start();
+
+	}
+	public void THREAS(){
+		(new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ArrayList<JsonObject> a= returnJsonArray(Globals.mainURL + Globals.allDisp);
+				//Log.w("testing dsp",Integer.toString(a.size()));
+				//Log.w("Get url", Globals.mainURL + Globals.allDisp);
+				ArrayList<String> list = new ArrayList<>();
+				for(int i = 0; i < a.size(); i++){
+					list.add((a.get(i)).Code);
+				}
+				int count = 0;
+				for(int i = 0; i < list.size(); i++){
+					if(list.get(i).equals("THREAS")){
+						count++;
+					}
+				}
+				Globals.THREAS=count;
+				//Log.w("testing dsp",Integer.toString(count));
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+
+					}
+				});
+			}
+		})).start();
+
+	}
+	public void COMINT(){
+		(new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ArrayList<JsonObject> a= returnJsonArray(Globals.mainURL + Globals.allDisp);
+				//Log.w("testing dsp",Integer.toString(a.size()));
+				//Log.w("Get url", Globals.mainURL + Globals.allDisp);
+				ArrayList<String> list = new ArrayList<>();
+				for(int i = 0; i < a.size(); i++){
+					list.add((a.get(i)).Code);
+				}
+				int count = 0;
+				for(int i = 0; i < list.size(); i++){
+					if(list.get(i).equals("COMINT")){
+						count++;
+					}
+				}
+				Globals.COMINT=count;
+				//Log.w("testing dsp",Integer.toString(count));
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+
+					}
+				});
+			}
+		})).start();
+
+	}
+	public void PERGON(){
+		(new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ArrayList<JsonObject> a= returnJsonArray(Globals.mainURL + Globals.allDisp);
+				//Log.w("testing dsp",Integer.toString(a.size()));
+				//Log.w("Get url", Globals.mainURL + Globals.allDisp);
+				ArrayList<String> list = new ArrayList<>();
+				for(int i = 0; i < a.size(); i++){
+					list.add((a.get(i)).Code);
+				}
+				int count = 0;
+				for(int i = 0; i < list.size(); i++){
+					if(list.get(i).equals("PERGON")){
+						count++;
+					}
+				}
+				Globals.PERGON=count;
+				//Log.w("testing dsp",Integer.toString(count));
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+
+					}
+				});
+			}
+		})).start();
+
+	}
+	public void PERDOW(){
+		(new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ArrayList<JsonObject> a= returnJsonArray(Globals.mainURL + Globals.allDisp);
+				//Log.w("testing dsp",Integer.toString(a.size()));
+				//Log.w("Get url", Globals.mainURL + Globals.allDisp);
+				ArrayList<String> list = new ArrayList<>();
+				for(int i = 0; i < a.size(); i++){
+					list.add((a.get(i)).Code);
+				}
+				int count = 0;
+				for(int i = 0; i < list.size(); i++){
+					if(list.get(i).equals("PERDOW")){
+						count++;
+					}
+				}
+				Globals.PERDOW=count;
 				//Log.w("testing dsp",Integer.toString(count));
 				runOnUiThread(new Runnable() {
 					@Override
